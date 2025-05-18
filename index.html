@@ -24,9 +24,8 @@
       display: flex;
       flex-direction: column;
       align-items: center;
-      padding-top: 4px;
-      padding-bottom: 4px;
-      gap: 10px;
+      padding: 8px;
+      gap: 16px; /* 👈 Maggiore spazio tra i campi */
       height: 100vh;
       overflow-y: auto;
       justify-content: flex-start;
@@ -37,7 +36,8 @@
       width: 180px;
       max-width: 90%;
       height: auto;
-      margin: 0; /* ← ridotto spazio sopra e sotto */
+      margin: 0;
+      line-height: 0;
     }
 
     button, input, select {
@@ -48,6 +48,10 @@
 
     #btn-inserisci {
       width: 200px;
+    }
+
+    #btn-conferma {
+      width: 200px; /* 👈 Ridotto come il bottone Inserisci PIN */
     }
 
     #extra-fields {
@@ -89,7 +93,7 @@
       max-width: 270px;
       font-size: 14px;
       padding: 8px;
-      border-radius: 5px;
+      border-radius: 6px;
       text-align: center;
       display: none;
     }
@@ -106,7 +110,7 @@
 
     #esito-box {
       background-color: #d4edda;
-      color: #155724;
+      color: #000;
     }
 
     @media only screen and (max-width: 600px) {
@@ -115,7 +119,8 @@
         font-size: 16px;
       }
 
-      #btn-inserisci {
+      #btn-inserisci,
+      #btn-conferma {
         width: 220px;
       }
 
@@ -126,14 +131,14 @@
 
       #logo {
         width: 200px;
-        margin: 5px 0;
+        margin: 0;
       }
     }
   </style>
 </head>
 <body>
   <div id="wrapper">
-    <img id="logo" src="https://i.imgur.com/G263KeW.png" alt="Logo SportivaNet" />
+    <img id="logo" src="https://i.imgur.com/gAYqEV9.png" alt="Logo SportivaNet" />
     <button id="btn-tabella" onclick="apriTabella()">📋 Visualizza ingressi</button>
 
     <select id="menu" onchange="updateInputColor()">
@@ -150,6 +155,14 @@
       <input type="date" id="data" />
       <select id="orario"></select>
     </div>
+
+    <button id="btn-conferma" onclick="confermaDataOra()">Conferma Data e Ora</button>
+    <button id="btn-registrazione" onclick="registrazioneFinale()">✅ REGISTRA</button>
+
+    <div id="esito-box">Inserire PIN</div>
+    <div id="error-box"></div>
+    <div id="message-box"></div>
+  </div>
 
     <button id="btn-conferma" onclick="confermaDataOra()">Conferma Data e Ora</button>
     <button id="btn-registrazione" onclick="registrazioneFinale()">✅ REGISTRA</button>
