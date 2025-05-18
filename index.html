@@ -12,114 +12,107 @@
 
   <meta charset="UTF-8" />
   <title>SportivaNet</title>
-  <style>
-    * { box-sizing: border-box; }
-    html, body {
-      height: 100vh;
-      width: 100vw;
-      margin: 0;
-      padding: 0;
-      overflow: hidden;
-    }
-    body {
-      background-image: url('https://i.imgur.com/iQumWug.jpeg');
-      background-size: cover;
-      background-repeat: no-repeat;
-      background-position: center;
-      font-family: sans-serif;
-    }
-    #wrapper {
-      height: 100vh;
-      display: flex;
-      flex-direction: column;
-      justify-content: center;
-      align-items: center;
-      padding: 10px;
-      text-align: center;
-      gap: 12px;
-    }
-    .menu-row {
-      display: flex;
-      gap: 10px;
-      align-items: center;
-    }
-    #menu, #codice, #nome, #cognome, #data, #orario {
-      padding: 9px;
-      font-size: 15px;
-      width: 270px;
+<style>
+  * {
+    box-sizing: border-box;
+  }
+
+  html, body {
+    margin: 0;
+    padding: 0;
+    height: 100%;
+    font-family: sans-serif;
+    background-image: url('https://i.imgur.com/iQumWug.jpeg');
+    background-size: cover;
+    background-position: center;
+  }
+
+  #logo {
+    display: none; /* Visibile solo su mobile */
+  }
+
+  #wrapper {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    padding: 20px;
+    gap: 12px;
+    min-height: 100vh;
+    justify-content: flex-start;
+  }
+
+  button, input, select {
+    padding: 10px;
+    font-size: 15px;
+    width: 270px;
+    margin-bottom: 10px;
+  }
+
+  #extra-fields {
+    display: flex;
+    gap: 10px;
+    flex-wrap: wrap;
+    justify-content: center;
+  }
+
+  #extra-fields input,
+  #extra-fields select {
+    width: 130px;
+  }
+
+  #btn-tabella {
+    background-color: #3498db;
+    color: white;
+    border: none;
+  }
+
+  #btn-tabella:hover {
+    background-color: #2980b9;
+  }
+
+  #btn-registrazione {
+    background-color: #00b894;
+    color: white;
+    font-weight: bold;
+  }
+
+  #btn-registrazione:disabled {
+    background-color: #aaa;
+    cursor: not-allowed;
+  }
+
+  #error-box, #message-box, #esito-box {
+    max-width: 270px;
+    font-size: 14px;
+    padding: 10px;
+    border-radius: 6px;
+    display: none;
+    text-align: center;
+  }
+
+  /* 🌐 SOLO PER DISPOSITIVI MOBILI */
+  @media only screen and (max-width: 600px) {
+    #logo {
+      display: block;
+      width: 160px;
+      height: auto;
+      margin-top: 20px;
       margin-bottom: 10px;
     }
-    #extra-fields {
-      display: none;
-      justify-content: center;
-      gap: 10px;
-      margin-bottom: 10px;
-    }
-    #extra-fields input, #extra-fields select {
-      width: 130px;
-      padding: 7px;
-      font-size: 14px;
-    }
-    #error-box, #message-box {
-      display: none;
-      background-color: #ffe6e6;
-      color: #b30000;
-      padding: 8px;
-      border-radius: 6px;
-      width: 270px;
-      font-weight: bold;
-      font-size: 14px;
-      box-shadow: 1px 1px 5px rgba(0, 0, 0, 0.2);
-    }
-    #btn-conferma,
-    #btn-inserisci {
-      padding: 9px 18px;
-      font-size: 15px;
-      cursor: pointer;
-      margin-bottom: 10px;
-    }
-    #btn-tabella {
-      padding: 9px 18px;
-      font-size: 14px;
-      cursor: pointer;
-      border-radius: 6px;
-      background-color: #3498db;
-      color: white;
-      border: none;
-      margin-bottom: 8px;
-    }
-    #btn-tabella:hover {
-      background-color: #2980b9;
-    }
-    #btn-registrazione {
-      padding: 12px 24px;
+
+    button, input, select {
+      width: 300px;
       font-size: 16px;
-      background-color: #00b894;
-      color: white;
-      border: none;
-      border-radius: 10px;
-      cursor: pointer;
-      box-shadow: 2px 2px 5px rgba(0, 0, 0, 0.3);
-      margin-top: 14px;
+      padding: 14px;
     }
-    #btn-registrazione:hover {
-      background-color: #019875;
+
+    #extra-fields input,
+    #extra-fields select {
+      width: 140px;
     }
-    #btn-registrazione:disabled {
-      background-color: #aaa;
-      cursor: not-allowed;
-    }
-    #esito-box {
-      display: none;
-      margin-top: 10px;
-      padding: 9px;
-      border-radius: 8px;
-      font-weight: bold;
-      width: 270px;
-      font-size: 14px;
-      box-shadow: 0 2px 4px rgba(0,0,0,0.2);
-    }
-  </style>
+  }
+</style>
+
 </head>
 <body>
   <img src="https://i.imgur.com/gAYqEV9.png" alt="Logo" style="position: absolute; top: 10px; left: 60px; height: 180px; z-index: 100;" />
