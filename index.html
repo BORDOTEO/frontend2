@@ -36,7 +36,7 @@
       width: 180px;
       max-width: 90%;
       height: auto;
-      margin: 5px 0 5px 0; /* ← ridotto spazio sopra e sotto */
+      margin: 5px 0;
     }
 
     button, input, select {
@@ -45,7 +45,8 @@
       width: 270px;
     }
 
-    #btn-inserisci {
+    #btn-inserisci,
+    #btn-conferma {
       width: 200px;
     }
 
@@ -86,8 +87,8 @@
 
     #error-box, #message-box, #esito-box {
       max-width: 270px;
-      font-size: 18px;       /* 📏 PIÙ GRANDE */
-      font-weight: bold;     /* 🔡 GRASSETTO */
+      font-size: 22px;
+      font-weight: bold;
       padding: 12px;
       border-radius: 6px;
       text-align: center;
@@ -107,13 +108,7 @@
     #esito-box {
       background-color: #d4edda;
       color: #155724;
-      font-size: 16px;     /* 👈 più grande */
-      font-weight: bold;   /* 👈 in grassetto */
-      display: none;
-      padding: 12px;
-      border-radius: 6px;
-}
-
+    }
 
     @media only screen and (max-width: 600px) {
       button, input, select {
@@ -121,7 +116,8 @@
         font-size: 16px;
       }
 
-      #btn-inserisci {
+      #btn-inserisci,
+      #btn-conferma {
         width: 220px;
       }
 
@@ -283,8 +279,8 @@
         if (data.messaggio) {
           esitoBox.textContent = data.messaggio;
           esitoBox.style.display = 'block';
-          esitoBox.style.fontSize = '22px'; // 👈 più grande SEMPRE
-          esitoBox.style.fontWeight = 'bold'; // 👈 grassetto SEMPRE
+          esitoBox.style.fontSize = '22px';
+          esitoBox.style.fontWeight = 'bold';
           setTimeout(() => esitoBox.style.display = 'none', 5000);
         }
       })
@@ -349,17 +345,17 @@
       })
       .then(response => response.json())
       .then(data => {
-      esitoBox.textContent = data.esito || 'Registrazione completata.';
-      esitoBox.style.backgroundColor = data.colore || '#d4edda';
-      esitoBox.style.color = '#155724';
-      esitoBox.style.fontSize = '22px';     // ✅ più grande
-      esitoBox.style.fontWeight = 'bold';   // ✅ in grassetto
-      esitoBox.style.display = 'block';
+        esitoBox.textContent = data.esito || 'Registrazione completata.';
+        esitoBox.style.backgroundColor = data.colore || '#d4edda';
+        esitoBox.style.color = '#155724';
+        esitoBox.style.fontSize = '22px';
+        esitoBox.style.fontWeight = 'bold';
+        esitoBox.style.display = 'block';
 
-    setTimeout(() => {
-      esitoBox.style.display = 'none';
-      document.getElementById('nome').value = '';
-      document.getElementById('cognome').value = '';
+        setTimeout(() => {
+          esitoBox.style.display = 'none';
+          document.getElementById('nome').value = '';
+          document.getElementById('cognome').value = '';
         }, 5000);
       })
       .catch(error => {
