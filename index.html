@@ -145,7 +145,13 @@
       <option value="INGRESSO">INGRESSO</option>
     </select>
 
-    <input type="text" id="codice" placeholder="PIN o Codice Ingresso" />
+    <input
+    type="text"
+    id="codice"
+    placeholder="PIN o Codice Ingresso"
+    inputmode="numeric"
+    pattern="[0-9]*"
+    />
     <button id="btn-inserisci" onclick="sendToSheet()">Inserisci PIN</button>
     <input type="text" id="nome" placeholder="Nome" />
     <input type="text" id="cognome" placeholder="Cognome" />
