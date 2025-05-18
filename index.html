@@ -25,7 +25,7 @@
       flex-direction: column;
       align-items: center;
       padding: 10px;
-      gap: 10px; /* 👈 Meno spazio tra i campi */
+      gap: 12px;
       height: 100vh;
       overflow-y: auto;
       justify-content: flex-start;
@@ -36,7 +36,7 @@
       width: 180px;
       max-width: 90%;
       height: auto;
-      margin: 5px 0;
+      margin: 0;
     }
 
     button, input, select {
@@ -45,12 +45,38 @@
       width: 270px;
     }
 
-    #btn-tabella,
-    #btn-inserisci,
+    #btn-tabella {
+      background-color: #3498db;
+      color: white;
+      font-weight: bold;
+      border: none;
+      margin-bottom: 4px; /* 👈 Ridotto spazio sotto */
+    }
+
+    #btn-tabella:hover {
+      background-color: #2980b9;
+    }
+
+    #btn-inserisci {
+      width: 200px;
+      margin-bottom: 4px; /* 👈 Ridotto spazio sotto */
+    }
+
     #btn-conferma {
       width: 200px;
-      margin-top: 5px;
-      margin-bottom: 5px;/* 👈 Larghezza ridotta per coerenza */
+      margin-top: 6px;
+      margin-bottom: 6px; /* 👈 Più spazio prima del REGISTRA */
+    }
+
+    #btn-registrazione {
+      background-color: #00b894;
+      color: white;
+      font-weight: bold;
+    }
+
+    #btn-registrazione:disabled {
+      background-color: #aaa;
+      cursor: not-allowed;
     }
 
     #extra-fields {
@@ -67,30 +93,9 @@
       padding: 9px;
     }
 
-    #btn-tabella {
-      background-color: #3498db;
-      color: white;
-      border: none;
-    }
-
-    #btn-tabella:hover {
-      background-color: #2980b9;
-    }
-
-    #btn-registrazione {
-      background-color: #00b894;
-      color: white;
-      font-weight: bold;
-    }
-
-    #btn-registrazione:disabled {
-      background-color: #aaa;
-      cursor: not-allowed;
-    }
-
     #error-box, #message-box, #esito-box {
       max-width: 270px;
-      font-size: 22px;
+      font-size: 18px;
       font-weight: bold;
       padding: 12px;
       border-radius: 6px;
@@ -119,7 +124,6 @@
         font-size: 16px;
       }
 
-      #btn-tabella,
       #btn-inserisci,
       #btn-conferma {
         width: 220px;
@@ -132,7 +136,6 @@
 
       #logo {
         width: 200px;
-        margin: 5px 0;
       }
     }
   </style>
@@ -148,13 +151,15 @@
     </select>
 
     <input
-    type="text"
-    id="codice"
-    placeholder="PIN o Codice Ingresso"
-    inputmode="numeric"
-    pattern="[0-9]*"
+      type="text"
+      id="codice"
+      placeholder="PIN o Codice Ingresso"
+      inputmode="numeric"
+      pattern="[0-9]*"
     />
+
     <button id="btn-inserisci" onclick="sendToSheet()">Inserisci PIN</button>
+
     <input type="text" id="nome" placeholder="Nome" />
     <input type="text" id="cognome" placeholder="Cognome" />
 
