@@ -1,7 +1,112 @@
 <!DOCTYPE html>
 <html lang="it">
 <head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>SportivaNet</title>
   <link rel="manifest" href="manifest.json" />
+  <style>
+    * {
+      box-sizing: border-box;
+    }
+
+    html, body {
+      margin: 0;
+      padding: 0;
+      height: 100%;
+      font-family: sans-serif;
+      background-image: url('https://i.imgur.com/iQumWug.jpeg');
+      background-size: cover;
+      background-position: center;
+    }
+
+    #logo {
+      display: block;
+      width: 80%;
+      max-width: 300px;
+      height: auto;
+      margin-top: 20px;
+      margin-bottom: 10px;
+    }
+
+    #wrapper {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      padding: 20px;
+      gap: 12px;
+      min-height: 100vh;
+      justify-content: flex-start;
+    }
+
+    button, input, select {
+      padding: 10px;
+      font-size: 15px;
+      width: 270px;
+      margin-bottom: 10px;
+    }
+
+    #extra-fields {
+      display: flex;
+      gap: 10px;
+      flex-wrap: wrap;
+      justify-content: center;
+    }
+
+    #extra-fields input,
+    #extra-fields select {
+      width: 130px;
+    }
+
+    #btn-tabella {
+      background-color: #3498db;
+      color: white;
+      border: none;
+    }
+
+    #btn-tabella:hover {
+      background-color: #2980b9;
+    }
+
+    #btn-registrazione {
+      background-color: #00b894;
+      color: white;
+      font-weight: bold;
+    }
+
+    #btn-registrazione:disabled {
+      background-color: #aaa;
+      cursor: not-allowed;
+    }
+
+    #error-box, #message-box, #esito-box {
+      max-width: 270px;
+      font-size: 14px;
+      padding: 10px;
+      border-radius: 6px;
+      display: none;
+      text-align: center;
+    }
+
+    @media only screen and (max-width: 600px) {
+      button, input, select {
+        width: 320px;
+        font-size: 17px;
+        padding: 14px;
+      }
+
+      #extra-fields input,
+      #extra-fields select {
+        width: 145px;
+      }
+
+      #wrapper {
+        padding-top: 30px;
+        gap: 14px;
+      }
+    }
+  </style>
+
   <script>
     if ('serviceWorker' in navigator) {
       navigator.serviceWorker.register('service-worker.js')
@@ -9,131 +114,18 @@
         .catch(error => console.error("Errore SW:", error));
     }
   </script>
-
-  <meta charset="UTF-8" />
-  <title>SportivaNet</title>
-<style>
-  * {
-    box-sizing: border-box;
-  }
-
-  html, body {
-    margin: 0;
-    padding: 0;
-    height: 100%;
-    font-family: sans-serif;
-    background-image: url('https://i.imgur.com/iQumWug.jpeg');
-    background-size: cover;
-    background-position: center;
-  }
-
-  #logo {
-    display: none; /* Visibile solo su mobile */
-  }
-
-  #wrapper {
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-    padding: 20px;
-    gap: 12px;
-    min-height: 100vh;
-    justify-content: flex-start;
-  }
-
-  button, input, select {
-    padding: 10px;
-    font-size: 15px;
-    width: 270px;
-    margin-bottom: 10px;
-  }
-
-  #extra-fields {
-    display: flex;
-    gap: 10px;
-    flex-wrap: wrap;
-    justify-content: center;
-  }
-
-  #extra-fields input,
-  #extra-fields select {
-    width: 130px;
-  }
-
-  #btn-tabella {
-    background-color: #3498db;
-    color: white;
-    border: none;
-  }
-
-  #btn-tabella:hover {
-    background-color: #2980b9;
-  }
-
-  #btn-registrazione {
-    background-color: #00b894;
-    color: white;
-    font-weight: bold;
-  }
-
-  #btn-registrazione:disabled {
-    background-color: #aaa;
-    cursor: not-allowed;
-  }
-
-  #error-box, #message-box, #esito-box {
-    max-width: 270px;
-    font-size: 14px;
-    padding: 10px;
-    border-radius: 6px;
-    display: none;
-    text-align: center;
-  }
-
-  /* 🌐 SOLO PER DISPOSITIVI MOBILI */
- @media only screen and (max-width: 600px) {
-  #logo {
-    display: block;
-    width: 140px;
-    margin-top: 20px;
-    margin-bottom: 10px;
-  }
-
-  button,
-  input,
-  select {
-    width: 320px;
-    font-size: 17px;
-    padding: 14px;
-  }
-
-  #extra-fields input,
-  #extra-fields select {
-    width: 145px;
-  }
-
-  #wrapper {
-    padding-top: 30px;
-    gap: 14px;
-  }
-}
-
-</style>
-
 </head>
 <body>
   <div id="wrapper">
     <img id="logo" src="https://i.imgur.com/gAYqEV9.png" alt="Logo SportivaNet" />
     <button id="btn-tabella" onclick="apriTabella()">📋 Visualizza ingressi</button>
 
-    <div class="menu-row">
-      <select id="menu" onchange="updateInputColor()">
-        <option value="PRENOTAZIONE">PRENOTAZIONE</option>
-        <option value="INGRESSO">INGRESSO</option>
-      </select>
-    </div>
+    <select id="menu" onchange="updateInputColor()">
+      <option value="PRENOTAZIONE">PRENOTAZIONE</option>
+      <option value="INGRESSO">INGRESSO</option>
+    </select>
 
-    <input type="text" id="codice" placeholder="" />
+    <input type="text" id="codice" placeholder="PIN o Codice Ingresso" />
     <button id="btn-inserisci" onclick="sendToSheet()">Inserisci PIN</button>
     <input type="text" id="nome" placeholder="Nome" />
     <input type="text" id="cognome" placeholder="Cognome" />
@@ -150,6 +142,7 @@
     <div id="error-box"></div>
     <div id="message-box"></div>
   </div>
+
   <script>
     const API_URL = "https://pwa-proxy-backend.onrender.com/api/proxy";
     const API_TOKEN = "supersegreto123";
@@ -329,16 +322,10 @@
       })
       .then(response => response.json())
       .then(data => {
-        if (data.esito) {
-          esitoBox.textContent = data.esito;
-          esitoBox.style.backgroundColor = data.colore || '#f0f0f0';
-          esitoBox.style.color = '#000';
-          esitoBox.style.display = 'block';
-        } else {
-          esitoBox.textContent = 'Registrazione completata.';
-          esitoBox.style.backgroundColor = '#ccc';
-          esitoBox.style.display = 'block';
-        }
+        esitoBox.textContent = data.esito || 'Registrazione completata.';
+        esitoBox.style.backgroundColor = data.colore || '#f0f0f0';
+        esitoBox.style.color = '#000';
+        esitoBox.style.display = 'block';
 
         setTimeout(() => {
           esitoBox.style.display = 'none';
