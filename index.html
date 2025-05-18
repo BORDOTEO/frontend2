@@ -24,8 +24,8 @@
       display: flex;
       flex-direction: column;
       align-items: center;
-      padding: 12px;
-      gap: 12px;
+      padding: 10px;
+      gap: 10px;
       height: 100vh;
       overflow-y: auto;
       justify-content: flex-start;
@@ -36,7 +36,7 @@
       width: 180px;
       max-width: 90%;
       height: auto;
-      margin: 0; /* ← Tolto spazio sopra e sotto */
+      margin: 5px 0 5px 0; /* ← ridotto spazio sopra e sotto */
     }
 
     button, input, select {
@@ -90,25 +90,22 @@
       padding: 8px;
       border-radius: 5px;
       text-align: center;
+      display: none;
     }
 
     #error-box {
       background-color: #ffe0e0;
       color: #900;
-      display: none;
     }
 
     #message-box {
       background-color: #fff3cd;
       color: #856404;
-      display: none;
     }
 
     #esito-box {
       background-color: #d4edda;
       color: #155724;
-      display: block; /* ← Sempre visibile se valorizzato */
-      min-height: 20px;
     }
 
     @media only screen and (max-width: 600px) {
@@ -128,7 +125,7 @@
 
       #logo {
         width: 200px;
-        margin: 0;
+        margin: 5px 0;
       }
     }
   </style>
@@ -185,6 +182,7 @@
       cognome.value = '';
       document.getElementById('error-box').style.display = 'none';
       document.getElementById('message-box').style.display = 'none';
+      document.getElementById('esito-box').style.display = 'none';
 
       const menuValue = menu.value;
 
@@ -244,6 +242,7 @@
         errorBox.textContent = 'Inserisci un codice.';
         errorBox.style.display = 'block';
         messageBox.style.display = 'none';
+        esitoBox.style.display = 'none';
         setTimeout(() => errorBox.style.display = 'none', 5000);
         return;
       }
@@ -283,6 +282,7 @@
       .catch(error => {
         errorBox.textContent = 'Errore durante l’invio.';
         errorBox.style.display = 'block';
+        esitoBox.style.display = 'none';
         setTimeout(() => errorBox.style.display = 'none', 5000);
         console.error(error);
       });
