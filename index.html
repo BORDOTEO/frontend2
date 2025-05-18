@@ -1,0 +1,364 @@
+<!DOCTYPE html>
+<html lang="it">
+<head>
+  <link rel="manifest" href="manifest.json" />
+  <script>
+    if ('serviceWorker' in navigator) {
+      navigator.serviceWorker.register('service-worker.js')
+        .then(() => console.log("Service Worker registrato"))
+        .catch(error => console.error("Errore SW:", error));
+    }
+  </script>
+
+  <meta charset="UTF-8" />
+  <title>SportivaNet</title>
+  <style>
+    * { box-sizing: border-box; }
+    html, body {
+      height: 100vh;
+      width: 100vw;
+      margin: 0;
+      padding: 0;
+      overflow: hidden;
+    }
+    body {
+      background-image: url('https://i.imgur.com/iQumWug.jpeg');
+      background-size: cover;
+      background-repeat: no-repeat;
+      background-position: center;
+      font-family: sans-serif;
+    }
+    #wrapper {
+      height: 100vh;
+      display: flex;
+      flex-direction: column;
+      justify-content: center;
+      align-items: center;
+      padding: 10px;
+      text-align: center;
+      gap: 12px;
+    }
+    .menu-row {
+      display: flex;
+      gap: 10px;
+      align-items: center;
+    }
+    #menu, #codice, #nome, #cognome, #data, #orario {
+      padding: 9px;
+      font-size: 15px;
+      width: 270px;
+      margin-bottom: 10px;
+    }
+    #extra-fields {
+      display: none;
+      justify-content: center;
+      gap: 10px;
+      margin-bottom: 10px;
+    }
+    #extra-fields input, #extra-fields select {
+      width: 130px;
+      padding: 7px;
+      font-size: 14px;
+    }
+    #error-box, #message-box {
+      display: none;
+      background-color: #ffe6e6;
+      color: #b30000;
+      padding: 8px;
+      border-radius: 6px;
+      width: 270px;
+      font-weight: bold;
+      font-size: 14px;
+      box-shadow: 1px 1px 5px rgba(0, 0, 0, 0.2);
+    }
+    #btn-conferma,
+    #btn-inserisci {
+      padding: 9px 18px;
+      font-size: 15px;
+      cursor: pointer;
+      margin-bottom: 10px;
+    }
+    #btn-tabella {
+      padding: 9px 18px;
+      font-size: 14px;
+      cursor: pointer;
+      border-radius: 6px;
+      background-color: #3498db;
+      color: white;
+      border: none;
+      margin-bottom: 8px;
+    }
+    #btn-tabella:hover {
+      background-color: #2980b9;
+    }
+    #btn-registrazione {
+      padding: 12px 24px;
+      font-size: 16px;
+      background-color: #00b894;
+      color: white;
+      border: none;
+      border-radius: 10px;
+      cursor: pointer;
+      box-shadow: 2px 2px 5px rgba(0, 0, 0, 0.3);
+      margin-top: 14px;
+    }
+    #btn-registrazione:hover {
+      background-color: #019875;
+    }
+    #btn-registrazione:disabled {
+      background-color: #aaa;
+      cursor: not-allowed;
+    }
+    #esito-box {
+      display: none;
+      margin-top: 10px;
+      padding: 9px;
+      border-radius: 8px;
+      font-weight: bold;
+      width: 270px;
+      font-size: 14px;
+      box-shadow: 0 2px 4px rgba(0,0,0,0.2);
+    }
+  </style>
+</head>
+<body>
+  <img src="https://i.imgur.com/gAYqEV9.png" alt="Logo" style="position: absolute; top: 10px; left: 60px; height: 180px; z-index: 100;" />
+  <div id="wrapper">
+    <button id="btn-tabella" onclick="apriTabella()">📋 Visualizza ingressi</button>
+
+    <div class="menu-row">
+      <select id="menu" onchange="updateInputColor()">
+        <option value="PRENOTAZIONE">PRENOTAZIONE</option>
+        <option value="INGRESSO">INGRESSO</option>
+      </select>
+    </div>
+
+    <input type="text" id="codice" placeholder="" />
+    <button id="btn-inserisci" onclick="sendToSheet()">Inserisci PIN</button>
+    <input type="text" id="nome" placeholder="Nome" />
+    <input type="text" id="cognome" placeholder="Cognome" />
+
+    <div id="extra-fields">
+      <input type="date" id="data" />
+      <select id="orario"></select>
+    </div>
+
+    <button id="btn-conferma" onclick="confermaDataOra()">Conferma Data e Ora</button>
+    <button id="btn-registrazione" onclick="registrazioneFinale()">✅ REGISTRA</button>
+
+    <div id="esito-box"></div>
+    <div id="error-box"></div>
+    <div id="message-box"></div>
+  </div>
+  <script>
+    const API_URL = "https://pwa-proxy-backend.onrender.com/api/proxy";
+    const API_TOKEN = "supersegreto123";
+
+    function apriTabella() {
+      window.open("tabella.html", "_blank");
+    }
+
+    function updateInputColor() {
+      const menu = document.getElementById('menu');
+      const input = document.getElementById('codice');
+      const nome = document.getElementById('nome');
+      const cognome = document.getElementById('cognome');
+      const extraFields = document.getElementById('extra-fields');
+      const dataField = document.getElementById('data');
+      const orarioField = document.getElementById('orario');
+      const bottoneInserisci = document.getElementById('btn-inserisci');
+      const bottoneConferma = document.getElementById('btn-conferma');
+
+      input.value = '';
+      nome.value = '';
+      cognome.value = '';
+      document.getElementById('error-box').style.display = 'none';
+      document.getElementById('message-box').style.display = 'none';
+
+      const menuValue = menu.value;
+
+      if (menuValue === 'INGRESSO') {
+        input.placeholder = 'Codice Ingresso';
+        input.style.backgroundColor = '#ccffcc';
+        nome.style.backgroundColor = '#ccffcc';
+        cognome.style.backgroundColor = '#ccffcc';
+        menu.style.backgroundColor = '#ccffcc';
+        menu.style.color = '#006600';
+        extraFields.style.display = 'none';
+        bottoneInserisci.textContent = 'Inserisci Codice';
+        bottoneConferma.style.display = 'none';
+      } else {
+        input.placeholder = 'PIN';
+        input.style.backgroundColor = 'yellow';
+        nome.style.backgroundColor = 'yellow';
+        cognome.style.backgroundColor = 'yellow';
+        menu.style.backgroundColor = 'yellow';
+        menu.style.color = 'black';
+        extraFields.style.display = 'flex';
+        bottoneInserisci.textContent = 'Inserisci PIN';
+        bottoneConferma.style.display = 'inline-block';
+
+        const today = new Date().toISOString().split('T')[0];
+        dataField.min = today;
+        dataField.value = today;
+
+        if (orarioField.children.length === 0) {
+          for (let i = 0; i < 24; i++) {
+            const option = document.createElement('option');
+            option.value = i.toString().padStart(2, '0') + ":00";
+            option.textContent = option.value;
+            orarioField.appendChild(option);
+          }
+        }
+      }
+
+      fetch(API_URL, {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/x-www-form-urlencoded',
+          'x-api-token': API_TOKEN
+        },
+        body: new URLSearchParams({ menu: menuValue })
+      });
+    }
+
+    function sendToSheet() {
+      const menu = document.getElementById('menu').value;
+      const codice = document.getElementById('codice').value;
+      const errorBox = document.getElementById('error-box');
+      const messageBox = document.getElementById('message-box');
+
+      if (!codice.trim()) {
+        errorBox.textContent = 'Inserisci un codice.';
+        errorBox.style.display = 'block';
+        messageBox.style.display = 'none';
+        setTimeout(() => errorBox.style.display = 'none', 5000);
+        return;
+      }
+
+      fetch(API_URL, {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/x-www-form-urlencoded',
+          'x-api-token': API_TOKEN
+        },
+        body: new URLSearchParams({ menu, codice })
+      })
+      .then(response => response.json())
+      .then(data => {
+        errorBox.style.display = 'none';
+        messageBox.style.display = 'none';
+
+        if (data.verifica === 'Codice Inesistente') {
+          document.getElementById('codice').value = '';
+          document.getElementById('nome').value = '';
+          document.getElementById('cognome').value = '';
+          errorBox.textContent = 'Codice non trovato.';
+          errorBox.style.display = 'block';
+          setTimeout(() => errorBox.style.display = 'none', 5000);
+        } else {
+          document.getElementById('nome').value = data.nome || '';
+          document.getElementById('cognome').value = data.cognome || '';
+          document.getElementById('codice').value = '';
+        }
+
+        if (data.messaggio) {
+          messageBox.textContent = data.messaggio;
+          messageBox.style.display = 'block';
+          setTimeout(() => messageBox.style.display = 'none', 5000);
+        }
+      })
+      .catch(error => {
+        errorBox.textContent = 'Errore durante l’invio.';
+        errorBox.style.display = 'block';
+        messageBox.style.display = 'none';
+        setTimeout(() => errorBox.style.display = 'none', 5000);
+        console.error(error);
+      });
+    }
+
+    function confermaDataOra() {
+      const data = document.getElementById('data').value;
+      const orario = document.getElementById('orario').value;
+      const errorBox = document.getElementById('error-box');
+      const messageBox = document.getElementById('message-box');
+
+      if (!data || !orario) {
+        errorBox.textContent = 'Seleziona data e orario.';
+        errorBox.style.display = 'block';
+        setTimeout(() => errorBox.style.display = 'none', 5000);
+        return;
+      }
+
+      fetch(API_URL, {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/x-www-form-urlencoded',
+          'x-api-token': API_TOKEN
+        },
+        body: new URLSearchParams({ data, orario })
+      })
+      .then(() => {
+        messageBox.textContent = 'Data e orario aggiornati con successo.';
+        messageBox.style.display = 'block';
+        setTimeout(() => messageBox.style.display = 'none', 5000);
+      })
+      .catch(error => {
+        errorBox.textContent = 'Errore durante la conferma.';
+        errorBox.style.display = 'block';
+        setTimeout(() => errorBox.style.display = 'none', 5000);
+        console.error(error);
+      });
+    }
+
+    function registrazioneFinale() {
+      const btn = document.getElementById('btn-registrazione');
+      const esitoBox = document.getElementById('esito-box');
+
+      btn.disabled = true;
+      btn.textContent = '⏳ Attendere...';
+      esitoBox.style.display = 'none';
+
+      fetch(API_URL, {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/x-www-form-urlencoded',
+          'x-api-token': API_TOKEN
+        },
+        body: new URLSearchParams({ azione: 'eseguiMacro' })
+      })
+      .then(response => response.json())
+      .then(data => {
+        if (data.esito) {
+          esitoBox.textContent = data.esito;
+          esitoBox.style.backgroundColor = data.colore || '#f0f0f0';
+          esitoBox.style.color = '#000';
+          esitoBox.style.display = 'block';
+        } else {
+          esitoBox.textContent = 'Registrazione completata.';
+          esitoBox.style.backgroundColor = '#ccc';
+          esitoBox.style.display = 'block';
+        }
+
+        setTimeout(() => {
+          esitoBox.style.display = 'none';
+          document.getElementById('nome').value = '';
+          document.getElementById('cognome').value = '';
+        }, 5000);
+      })
+      .catch(error => {
+        esitoBox.textContent = 'Errore nell’avvio della macro.';
+        esitoBox.style.backgroundColor = '#ffcccc';
+        esitoBox.style.display = 'block';
+        console.error(error);
+      })
+      .finally(() => {
+        btn.disabled = false;
+        btn.textContent = '✅ REGISTRA';
+      });
+    }
+
+    window.onload = updateInputColor;
+  </script>
+</body>
+</html>
