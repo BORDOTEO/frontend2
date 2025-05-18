@@ -31,28 +31,29 @@
     }
 
     #logo {
-      width: 100px;
+      display: block;
+      width: 140px;
       height: auto;
-      margin-bottom: 5px;
+      margin: 10px auto 10px auto;
     }
 
     button, input, select {
-      padding: 8px;
-      font-size: 14px;
-      width: 240px;
-      margin-bottom: 6px;
+      padding: 10px;
+      font-size: 15px;
+      width: 260px;
+      margin-bottom: 8px;
     }
 
     #extra-fields {
       display: flex;
-      gap: 6px;
+      gap: 8px;
       flex-wrap: wrap;
       justify-content: center;
     }
 
     #extra-fields input,
     #extra-fields select {
-      width: 115px;
+      width: 124px;
     }
 
     #btn-tabella {
@@ -77,10 +78,10 @@
     }
 
     #error-box, #message-box, #esito-box {
-      max-width: 240px;
-      font-size: 13px;
-      padding: 6px;
-      border-radius: 4px;
+      max-width: 260px;
+      font-size: 14px;
+      padding: 8px;
+      border-radius: 5px;
       text-align: center;
     }
 
@@ -100,6 +101,23 @@
       background-color: #d4edda;
       color: #155724;
       display: none;
+    }
+
+    @media only screen and (max-width: 600px) {
+      button, input, select {
+        width: 300px;
+        font-size: 16px;
+      }
+
+      #extra-fields input,
+      #extra-fields select {
+        width: 145px;
+      }
+
+      #logo {
+        width: 150px;
+        margin-bottom: 10px;
+      }
     }
   </style>
 
