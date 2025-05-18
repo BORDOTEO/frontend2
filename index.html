@@ -20,42 +20,39 @@
       background-position: center;
     }
 
-    #logo {
-      display: block;
-      width: 80%;
-      max-width: 300px;
-      height: auto;
-      margin-top: 20px;
-      margin-bottom: 10px;
-    }
-
     #wrapper {
       display: flex;
       flex-direction: column;
       align-items: center;
-      padding: 20px;
-      gap: 12px;
-      min-height: 100vh;
       justify-content: flex-start;
+      padding: 10px;
+      height: 100vh;
+      overflow: hidden;
+    }
+
+    #logo {
+      width: 100px;
+      height: auto;
+      margin-bottom: 5px;
     }
 
     button, input, select {
-      padding: 10px;
-      font-size: 15px;
-      width: 270px;
-      margin-bottom: 10px;
+      padding: 8px;
+      font-size: 14px;
+      width: 240px;
+      margin-bottom: 6px;
     }
 
     #extra-fields {
       display: flex;
-      gap: 10px;
+      gap: 6px;
       flex-wrap: wrap;
       justify-content: center;
     }
 
     #extra-fields input,
     #extra-fields select {
-      width: 130px;
+      width: 115px;
     }
 
     #btn-tabella {
@@ -80,30 +77,29 @@
     }
 
     #error-box, #message-box, #esito-box {
-      max-width: 270px;
-      font-size: 14px;
-      padding: 10px;
-      border-radius: 6px;
-      display: none;
+      max-width: 240px;
+      font-size: 13px;
+      padding: 6px;
+      border-radius: 4px;
       text-align: center;
     }
 
-    @media only screen and (max-width: 600px) {
-      button, input, select {
-        width: 320px;
-        font-size: 17px;
-        padding: 14px;
-      }
+    #error-box {
+      background-color: #ffe0e0;
+      color: #900;
+      display: none;
+    }
 
-      #extra-fields input,
-      #extra-fields select {
-        width: 145px;
-      }
+    #message-box {
+      background-color: #fff3cd;
+      color: #856404;
+      display: none;
+    }
 
-      #wrapper {
-        padding-top: 30px;
-        gap: 14px;
-      }
+    #esito-box {
+      background-color: #d4edda;
+      color: #155724;
+      display: none;
     }
   </style>
 
@@ -138,7 +134,7 @@
     <button id="btn-conferma" onclick="confermaDataOra()">Conferma Data e Ora</button>
     <button id="btn-registrazione" onclick="registrazioneFinale()">✅ REGISTRA</button>
 
-    <div id="esito-box"></div>
+    <div id="esito-box">Inserire PIN</div>
     <div id="error-box"></div>
     <div id="message-box"></div>
   </div>
@@ -220,6 +216,7 @@
       const codice = document.getElementById('codice').value;
       const errorBox = document.getElementById('error-box');
       const messageBox = document.getElementById('message-box');
+      const esitoBox = document.getElementById('esito-box');
 
       if (!codice.trim()) {
         errorBox.textContent = 'Inserisci un codice.';
@@ -256,15 +253,14 @@
         }
 
         if (data.messaggio) {
-          messageBox.textContent = data.messaggio;
-          messageBox.style.display = 'block';
-          setTimeout(() => messageBox.style.display = 'none', 5000);
+          esitoBox.textContent = data.messaggio;
+          esitoBox.style.display = 'block';
+          setTimeout(() => esitoBox.style.display = 'none', 5000);
         }
       })
       .catch(error => {
         errorBox.textContent = 'Errore durante l’invio.';
         errorBox.style.display = 'block';
-        messageBox.style.display = 'none';
         setTimeout(() => errorBox.style.display = 'none', 5000);
         console.error(error);
       });
@@ -323,8 +319,8 @@
       .then(response => response.json())
       .then(data => {
         esitoBox.textContent = data.esito || 'Registrazione completata.';
-        esitoBox.style.backgroundColor = data.colore || '#f0f0f0';
-        esitoBox.style.color = '#000';
+        esitoBox.style.backgroundColor = data.colore || '#d4edda';
+        esitoBox.style.color = '#155724';
         esitoBox.style.display = 'block';
 
         setTimeout(() => {
