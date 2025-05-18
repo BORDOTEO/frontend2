@@ -24,36 +24,44 @@
       display: flex;
       flex-direction: column;
       align-items: center;
-      justify-content: flex-start;
-      padding: 10px;
+      padding: 16px;
+      gap: 12px;
       height: 100vh;
       overflow: hidden;
+      justify-content: flex-start;
     }
 
     #logo {
       display: block;
-      width: 140px;
+      width: 180px;
+      max-width: 90%;
       height: auto;
-      margin: 10px auto 10px auto;
+      margin-top: 10px;
+      margin-bottom: 10px;
     }
 
     button, input, select {
-      padding: 10px;
       font-size: 15px;
-      width: 260px;
-      margin-bottom: 8px;
+      padding: 10px;
+      width: 270px;
+    }
+
+    #btn-inserisci {
+      width: 200px;
     }
 
     #extra-fields {
       display: flex;
-      gap: 8px;
+      gap: 10px;
       flex-wrap: wrap;
       justify-content: center;
     }
 
-    #extra-fields input,
+    #extra-fields input[type="date"],
     #extra-fields select {
-      width: 124px;
+      width: 130px;
+      font-size: 14px;
+      padding: 9px;
     }
 
     #btn-tabella {
@@ -78,7 +86,7 @@
     }
 
     #error-box, #message-box, #esito-box {
-      max-width: 260px;
+      max-width: 270px;
       font-size: 14px;
       padding: 8px;
       border-radius: 5px;
@@ -109,25 +117,21 @@
         font-size: 16px;
       }
 
+      #btn-inserisci {
+        width: 220px;
+      }
+
       #extra-fields input,
       #extra-fields select {
         width: 145px;
       }
 
       #logo {
-        width: 150px;
+        width: 200px;
         margin-bottom: 10px;
       }
     }
   </style>
-
-  <script>
-    if ('serviceWorker' in navigator) {
-      navigator.serviceWorker.register('service-worker.js')
-        .then(() => console.log("Service Worker registrato"))
-        .catch(error => console.error("Errore SW:", error));
-    }
-  </script>
 </head>
 <body>
   <div id="wrapper">
