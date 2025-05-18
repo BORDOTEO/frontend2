@@ -25,7 +25,7 @@
       flex-direction: column;
       align-items: center;
       padding: 10px;
-      gap: 14px; /* 👈 equilibrio verticale generale */
+      gap: 6px; /* 👈 Meno spazio tra i campi */
       height: 100vh;
       overflow-y: auto;
       justify-content: flex-start;
@@ -36,7 +36,7 @@
       width: 180px;
       max-width: 90%;
       height: auto;
-      margin: 0;
+      margin: 5px 0;
     }
 
     button, input, select {
@@ -45,38 +45,10 @@
       width: 270px;
     }
 
-    #btn-tabella {
-      background-color: #3498db;
-      color: white;
-      font-weight: bold;
-      border: none;
-      margin-bottom: 6px; /* 👈 spazio dopo "Visualizza ingressi" */
-    }
-
-    #btn-tabella:hover {
-      background-color: #2980b9;
-    }
-
-    #btn-inserisci {
-      width: 200px;
-      margin-bottom: 6px; /* 👈 spazio tra bottone e nome/cognome */
-    }
-
+    #btn-tabella,
+    #btn-inserisci,
     #btn-conferma {
-      width: 200px;
-      margin-top: 6px; /* 👈 spazio sopra conferma data */
-      margin-bottom: 6px; /* 👈 spazio sotto conferma data */
-    }
-
-    #btn-registrazione {
-      background-color: #00b894;
-      color: white;
-      font-weight: bold;
-    }
-
-    #btn-registrazione:disabled {
-      background-color: #aaa;
-      cursor: not-allowed;
+      width: 200px; /* 👈 Larghezza ridotta per coerenza */
     }
 
     #extra-fields {
@@ -93,9 +65,30 @@
       padding: 9px;
     }
 
+    #btn-tabella {
+      background-color: #3498db;
+      color: white;
+      border: none;
+    }
+
+    #btn-tabella:hover {
+      background-color: #2980b9;
+    }
+
+    #btn-registrazione {
+      background-color: #00b894;
+      color: white;
+      font-weight: bold;
+    }
+
+    #btn-registrazione:disabled {
+      background-color: #aaa;
+      cursor: not-allowed;
+    }
+
     #error-box, #message-box, #esito-box {
       max-width: 270px;
-      font-size: 18px;
+      font-size: 22px;
       font-weight: bold;
       padding: 12px;
       border-radius: 6px;
@@ -124,6 +117,7 @@
         font-size: 16px;
       }
 
+      #btn-tabella,
       #btn-inserisci,
       #btn-conferma {
         width: 220px;
@@ -136,6 +130,7 @@
 
       #logo {
         width: 200px;
+        margin: 5px 0;
       }
     }
   </style>
@@ -152,7 +147,6 @@
 
     <input type="text" id="codice" placeholder="PIN o Codice Ingresso" />
     <button id="btn-inserisci" onclick="sendToSheet()">Inserisci PIN</button>
-
     <input type="text" id="nome" placeholder="Nome" />
     <input type="text" id="cognome" placeholder="Cognome" />
 
@@ -168,7 +162,8 @@
     <div id="error-box"></div>
     <div id="message-box"></div>
   </div>
-  
+
+  <!-- Script identico a prima -->
   <script>
     const API_URL = "https://pwa-proxy-backend.onrender.com/api/proxy";
     const API_TOKEN = "supersegreto123";
