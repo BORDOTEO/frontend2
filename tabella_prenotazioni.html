@@ -1,0 +1,172 @@
+<!DOCTYPE html>
+<html lang="it">
+<head>
+  <meta charset="UTF-8">
+  <title>Tabella Ingressi</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <style>
+    body {
+      font-family: Arial, sans-serif;
+      background: url('https://i.imgur.com/iQumWug.jpeg') no-repeat center center fixed;
+      background-size: cover;
+      margin: 0;
+      padding: 20px;
+    }
+
+    h1 {
+      position: sticky;
+      top: 0;
+      z-index: 10;
+      margin: 0;
+      padding: 8px 0;
+      font-size: 20px;
+      background-color: rgba(0, 0, 0, 0.6);
+      text-align: center;
+      color: white;
+      text-shadow: 1px 1px 2px black;
+      backdrop-filter: blur(4px);
+    }
+
+    @media (max-width: 600px) {
+      h1 {
+        font-size: 16px;
+        padding: 6px 0;
+      }
+    }
+
+    #caricamento {
+      text-align: center;
+      font-style: italic;
+      color: white;
+      margin-top: 20px;
+      font-size: 18px;
+      text-shadow: 1px 1px 2px black;
+    }
+
+    table {
+      width: 100%;
+      border-collapse: collapse;
+      margin-top: 20px;
+      background-color: rgba(255, 255, 255, 0.9);
+      box-shadow: 0 0 10px rgba(0,0,0,0.3);
+    }
+
+    th, td {
+      padding: 12px 15px;
+      text-align: center;
+      border-bottom: 1px solid #ddd;
+    }
+
+    th {
+      background-color: #009879;
+      color: white;
+      text-transform: uppercase;
+      font-size: 14px;
+    }
+
+    tbody tr {
+      background-color: #e6f9e6; /* verde chiaro */
+    }
+
+    tr:hover {
+      background-color: rgba(0, 0, 0, 0.05);
+    }
+
+    #nessun-dato {
+      text-align: center;
+      color: #fff;
+      font-style: italic;
+      margin-top: 30px;
+      text-shadow: 1px 1px 2px black;
+      display: none;
+    }
+  </style>
+</head>
+<body>
+
+  <h1>Ingressi Registrati</h1>
+  <p id="caricamento">⏳ Caricamento dati in corso...</p>
+
+  <table id="tabella-ingressi">
+    <thead>
+      <tr>
+        <th>Data</th>
+        <th>Ora</th>
+        <th>N° Entrate Mese</th>
+        <th>Nome</th>
+        <th>Cognome</th>
+        <th>Mese</th>
+      </tr>
+    </thead>
+    <tbody></tbody>
+  </table>
+
+  <p id="nessun-dato">Nessun dato da visualizzare.</p>
+
+  <script>
+    const API_URL = "https://pwa-proxy-backend.onrender.com/api/proxy";
+    const API_TOKEN = "supersegreto123";
+
+    function formatDateTime(isoString) {
+      const date = new Date(isoString);
+      if (isNaN(date)) return { data: "", ora: "" };
+      const giorno = String(date.getDate()).padStart(2, '0');
+      const mese = String(date.getMonth() + 1).padStart(2, '0');
+      const anno = date.getFullYear();
+      const ore = String(date.getHours()).padStart(2, '0');
+      const minuti = String(date.getMinutes()).padStart(2, '0');
+      return { data: `${giorno}/${mese}/${anno}`, ora: `${ore}:${minuti}` };
+    }
+
+    fetch(API_URL, {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/x-www-form-urlencoded",
+        "x-api-token": API_TOKEN
+      },
+      body: new URLSearchParams({ azione: "mostraPrenotazioni" })
+    })
+    .then(res => res.json())
+    .then(dati => {
+      const tbody = document.querySelector("#tabella-ingressi tbody");
+      const nessunDato = document.getElementById("nessun-dato");
+      const caricamento = document.getElementById("caricamento");
+
+      if (!Array.isArray(dati) || dati.length <= 3) {
+        nessunDato.style.display = "block";
+        caricamento.style.display = "none";
+        return;
+      }
+
+      dati.slice(3).forEach(riga => {
+        if (!riga || riga.length < 5 || riga.every(cell => !cell || cell.toString().trim() === "")) return;
+
+        const { data, ora } = formatDateTime(riga[0]);
+        if (!data || !ora) return;
+
+        const tr = document.createElement("tr");
+        tr.innerHTML = `
+          <td>${data}</td>
+          <td>${ora}</td>
+          <td>${riga[1] || ""}</td>
+          <td>${riga[2] || ""}</td>
+          <td>${riga[3] || ""}</td>
+          <td>${riga[4] || ""}</td>
+        `;
+        tbody.appendChild(tr);
+      });
+
+      if (!tbody.hasChildNodes()) {
+        nessunDato.style.display = "block";
+      }
+
+      caricamento.style.display = "none";
+    })
+    .catch(err => {
+      console.error("Errore nel caricamento dati:", err);
+      document.getElementById("caricamento").textContent = "❌ Errore nel caricamento dati.";
+    });
+  </script>
+
+</body>
+</html>
