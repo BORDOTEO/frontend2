@@ -10,32 +10,24 @@
       background: url('https://i.imgur.com/iQumWug.jpeg') no-repeat center center fixed;
       background-size: cover;
       margin: 0;
-      padding: 20px;
+      padding: 0;
     }
 
-    h1 {
+    #barra-superiore {
+      background-color: #00695c;
+      padding: 15px 0;
       text-align: center;
       color: white;
+      box-shadow: 0 2px 4px rgba(0,0,0,0.3);
+      position: sticky;
+      top: 0;
+      z-index: 1000;
+    }
+
+    #barra-superiore h1 {
+      margin: 0;
+      font-size: 24px;
       text-shadow: 1px 1px 2px black;
-    }
-
-    #btn-indietro {
-      display: block;
-      margin: 10px auto;
-      padding: 10px 20px;
-      font-weight: bold;
-      background-color: #34495e;
-      color: white;
-      border: none;
-      border-radius: 5px;
-      cursor: pointer;
-      box-shadow: 0 4px #2c3e50;
-      transition: transform 0.1s ease;
-    }
-
-    #btn-indietro:active {
-      transform: translateY(2px);
-      box-shadow: 0 2px #2c3e50;
     }
 
     table {
@@ -74,8 +66,9 @@
 </head>
 <body>
 
-  <h1>Ingressi Registrati</h1>
-  <button id="btn-indietro" onclick="tornaAllaHome()">⬅ Torna indietro</button>
+  <div id="barra-superiore">
+    <h1>Ingressi Registrati</h1>
+  </div>
 
   <table id="tabella-ingressi">
     <thead>
@@ -94,13 +87,8 @@
   <p id="nessun-dato" style="display:none;">Nessun dato da visualizzare.</p>
 
   <script>
-    const API_URL = "https://pwa-proxy-backend.onrender.com/api/proxy"; // ✅ URI backend su Render
+    const API_URL = "https://pwa-proxy-backend.onrender.com/api/proxy";
     const API_TOKEN = "supersegreto123";
-
-    function tornaAllaHome() {
-      // Torna alla home della PWA (index.html)
-      window.location.href = "index.html";
-    }
 
     function formatDateTime(isoString) {
       const date = new Date(isoString);
