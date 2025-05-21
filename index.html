@@ -225,10 +225,17 @@
     const API_TOKEN = "supersegreto123";
 
     function apriTabella() {
-      document.getElementById('wrapper').style.display = 'none';
-      document.getElementById('iframe-wrapper').style.display = 'flex';
-      document.getElementById('iframe-tabella').src = 'tabella.html';
-    }
+  const menuValue = document.getElementById('menu').value;
+  document.getElementById('wrapper').style.display = 'none';
+  document.getElementById('iframe-wrapper').style.display = 'flex';
+
+  if (menuValue === 'INGRESSO') {
+    document.getElementById('iframe-tabella').src = 'tabella_ingressi.html';
+  } else if (menuValue === 'PRENOTAZIONE') {
+    document.getElementById('iframe-tabella').src = 'tabella_prenotazioni.html';
+  }
+}
+
 
     function chiudiTabella() {
       document.getElementById('iframe-wrapper').style.display = 'none';
