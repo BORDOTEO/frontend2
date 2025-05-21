@@ -26,6 +26,15 @@
       backdrop-filter: blur(4px);
     }
 
+    #caricamento {
+      text-align: center;
+      font-style: italic;
+      color: white;
+      margin-top: 20px;
+      font-size: 18px;
+      text-shadow: 1px 1px 2px black;
+    }
+
     table {
       width: 100%;
       border-collapse: collapse;
@@ -57,12 +66,14 @@
       font-style: italic;
       margin-top: 30px;
       text-shadow: 1px 1px 2px black;
+      display: none;
     }
   </style>
 </head>
 <body>
 
   <h1>Ingressi Registrati</h1>
+  <p id="caricamento">⏳ Caricamento dati in corso...</p>
 
   <table id="tabella-ingressi">
     <thead>
@@ -78,7 +89,7 @@
     <tbody></tbody>
   </table>
 
-  <p id="nessun-dato" style="display:none;">Nessun dato da visualizzare.</p>
+  <p id="nessun-dato">Nessun dato da visualizzare.</p>
 
   <script>
     const API_URL = "https://pwa-proxy-backend.onrender.com/api/proxy";
@@ -107,9 +118,11 @@
     .then(dati => {
       const tbody = document.querySelector("#tabella-ingressi tbody");
       const nessunDato = document.getElementById("nessun-dato");
+      const caricamento = document.getElementById("caricamento");
 
       if (!Array.isArray(dati) || dati.length <= 3) {
         nessunDato.style.display = "block";
+        caricamento.style.display = "none";
         return;
       }
 
@@ -134,11 +147,12 @@
       if (!tbody.hasChildNodes()) {
         nessunDato.style.display = "block";
       }
+
+      caricamento.style.display = "none";
     })
     .catch(err => {
       console.error("Errore nel caricamento dati:", err);
-      document.getElementById("nessun-dato").textContent = "Errore nel caricamento dati.";
-      document.getElementById("nessun-dato").style.display = "block";
+      document.getElementById("caricamento").textContent = "❌ Errore nel caricamento dati.";
     });
   </script>
 
