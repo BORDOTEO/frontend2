@@ -30,10 +30,14 @@
       text-shadow: 1px 1px 2px black;
     }
 
+    .tabella-wrapper {
+      overflow-x: auto;
+    }
+
     table {
       width: 100%;
       border-collapse: collapse;
-      margin-top: 20px;
+      margin-top: 0;
       background-color: rgba(255, 255, 255, 0.9);
       box-shadow: 0 0 10px rgba(0,0,0,0.3);
     }
@@ -49,6 +53,9 @@
       color: white;
       text-transform: uppercase;
       font-size: 14px;
+      position: sticky;
+      top: 60px; /* sotto la barra superiore */
+      z-index: 999;
     }
 
     tr:hover {
@@ -62,6 +69,21 @@
       margin-top: 30px;
       text-shadow: 1px 1px 2px black;
     }
+
+    @media only screen and (max-width: 768px) {
+      th, td {
+        padding: 8px 10px;
+        font-size: 13px;
+      }
+
+      #barra-superiore h1 {
+        font-size: 18px;
+      }
+
+      table {
+        min-width: 600px;
+      }
+    }
   </style>
 </head>
 <body>
@@ -70,19 +92,21 @@
     <h1>Ingressi Registrati</h1>
   </div>
 
-  <table id="tabella-ingressi">
-    <thead>
-      <tr>
-        <th>Data</th>
-        <th>Ora</th>
-        <th>N° Entrate del Mese</th>
-        <th>Nome</th>
-        <th>Cognome</th>
-        <th>Mese</th>
-      </tr>
-    </thead>
-    <tbody></tbody>
-  </table>
+  <div class="tabella-wrapper">
+    <table id="tabella-ingressi">
+      <thead>
+        <tr>
+          <th>Data</th>
+          <th>Ora</th>
+          <th>N° Entrate del Mese</th>
+          <th>Nome</th>
+          <th>Cognome</th>
+          <th>Mese</th>
+        </tr>
+      </thead>
+      <tbody></tbody>
+    </table>
+  </div>
 
   <p id="nessun-dato" style="display:none;">Nessun dato da visualizzare.</p>
 
