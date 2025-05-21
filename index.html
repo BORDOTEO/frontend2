@@ -46,27 +46,37 @@
     }
 
     #btn-tabella {
-      width: 200px;
+      width: 250px;
+      white-space: nowrap;
       background-color: #3498db;
       color: white;
       font-weight: bold;
       border: none;
-      margin-bottom: 4px; /* 👈 Ridotto spazio sotto */
+      margin-bottom: 4px;
     }
 
     #btn-tabella:hover {
       background-color: #2980b9;
     }
 
-    #btn-inserisci {
-      width: 200px;
-      margin-bottom: 4px; /* 👈 Ridotto spazio sotto */
+    #btn-inserisci, #btn-conferma {
+      font-weight: bold;
+      border: 2px solid #555;
+      background-color: #f0f0f0;
+      transition: all 0.15s ease;
+      box-shadow: 0 4px #999;
+      width: 220px;
+    }
+
+    #btn-inserisci:active, #btn-conferma:active {
+      transform: translateY(2px);
+      box-shadow: 0 2px #666;
+      background-color: #e0e0e0;
     }
 
     #btn-conferma {
-      width: 200px;
       margin-top: 6px;
-      margin-bottom: 6px; /* 👈 Più spazio prima del REGISTRA */
+      margin-bottom: 6px;
     }
 
     #btn-registrazione {
@@ -119,6 +129,18 @@
       color: #155724;
     }
 
+    .readonly-field {
+      background-color: #e0e0e0;
+      color: #777;
+      border: 1px solid #bbb;
+    }
+
+    .readonly-active {
+      background-color: white;
+      color: black;
+      border: 1px solid #ccc;
+    }
+
     @media only screen and (max-width: 600px) {
       button, input, select {
         width: 300px;
@@ -127,7 +149,7 @@
 
       #btn-inserisci,
       #btn-conferma {
-        width: 220px;
+        width: 240px;
       }
 
       #extra-fields input,
@@ -144,25 +166,18 @@
 <body>
   <div id="wrapper">
     <img id="logo" src="https://i.imgur.com/G263KeW.png" />
-    <button id="btn-tabella" onclick="apriTabella()">📋 Visualizza ingressi</button>
+    <button id="btn-tabella" onclick="apriTabella()">📋 Visualizza prenotazioni</button>
 
     <select id="menu" onchange="updateInputColor()">
       <option value="PRENOTAZIONE">PRENOTAZIONE</option>
       <option value="INGRESSO">INGRESSO</option>
     </select>
 
-    <input
-      type="text"
-      id="codice"
-      placeholder="PIN o Codice Ingresso"
-      inputmode="numeric"
-      pattern="[0-9]*"
-    />
-
+    <input type="text" id="codice" placeholder="PIN o Codice Ingresso" inputmode="numeric" pattern="[0-9]*" />
     <button id="btn-inserisci" onclick="sendToSheet()">Inserisci PIN</button>
 
-    <input type="text" id="nome" placeholder="Nome" />
-    <input type="text" id="cognome" placeholder="Cognome" />
+    <input type="text" id="nome" placeholder="Nome" readonly class="readonly-field" />
+    <input type="text" id="cognome" placeholder="Cognome" readonly class="readonly-field" />
 
     <div id="extra-fields">
       <input type="date" id="data" />
@@ -177,13 +192,14 @@
     <div id="message-box"></div>
   </div>
 
-  <!-- Script identico a prima -->
   <script>
     const API_URL = "https://pwa-proxy-backend.onrender.com/api/proxy";
     const API_TOKEN = "supersegreto123";
 
     function apriTabella() {
-      window.open("tabella.html", "_blank");
+      const menuValue = document.getElementById('menu').value;
+      const link = menuValue === 'PRENOTAZIONE' ? 'prenotazioni.html' : 'tabella.html';
+      window.open(link, "_blank");
     }
 
     function updateInputColor() {
@@ -196,10 +212,15 @@
       const orarioField = document.getElementById('orario');
       const bottoneInserisci = document.getElementById('btn-inserisci');
       const bottoneConferma = document.getElementById('btn-conferma');
+      const btnTabella = document.getElementById('btn-tabella');
 
       input.value = '';
       nome.value = '';
       cognome.value = '';
+      nome.classList.remove('readonly-active');
+      cognome.classList.remove('readonly-active');
+      nome.classList.add('readonly-field');
+      cognome.classList.add('readonly-field');
       document.getElementById('error-box').style.display = 'none';
       document.getElementById('message-box').style.display = 'none';
       document.getElementById('esito-box').style.display = 'none';
@@ -216,6 +237,7 @@
         extraFields.style.display = 'none';
         bottoneInserisci.textContent = 'Inserisci Codice';
         bottoneConferma.style.display = 'none';
+        btnTabella.textContent = '📋 Visualizza ingressi';
       } else {
         input.placeholder = 'PIN';
         input.style.backgroundColor = 'yellow';
@@ -226,6 +248,7 @@
         extraFields.style.display = 'flex';
         bottoneInserisci.textContent = 'Inserisci PIN';
         bottoneConferma.style.display = 'inline-block';
+        btnTabella.textContent = '📋 Visualizza prenotazioni';
 
         const today = new Date().toISOString().split('T')[0];
         dataField.min = today;
@@ -257,6 +280,8 @@
       const errorBox = document.getElementById('error-box');
       const messageBox = document.getElementById('message-box');
       const esitoBox = document.getElementById('esito-box');
+      const nome = document.getElementById('nome');
+      const cognome = document.getElementById('cognome');
 
       if (!codice.trim()) {
         errorBox.textContent = 'Inserisci un codice.';
@@ -282,14 +307,22 @@
 
         if (data.verifica === 'Codice Inesistente') {
           document.getElementById('codice').value = '';
-          document.getElementById('nome').value = '';
-          document.getElementById('cognome').value = '';
+          nome.value = '';
+          cognome.value = '';
+          nome.classList.remove('readonly-active');
+          cognome.classList.remove('readonly-active');
+          nome.classList.add('readonly-field');
+          cognome.classList.add('readonly-field');
           errorBox.textContent = 'Codice non trovato.';
           errorBox.style.display = 'block';
           setTimeout(() => errorBox.style.display = 'none', 5000);
         } else {
-          document.getElementById('nome').value = data.nome || '';
-          document.getElementById('cognome').value = data.cognome || '';
+          nome.value = data.nome || '';
+          cognome.value = data.cognome || '';
+          nome.classList.remove('readonly-field');
+          cognome.classList.remove('readonly-field');
+          nome.classList.add('readonly-active');
+          cognome.classList.add('readonly-active');
           document.getElementById('codice').value = '';
         }
 
