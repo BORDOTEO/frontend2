@@ -2,7 +2,7 @@
 <html lang="it">
 <head>
   <meta charset="UTF-8">
-  <title>Tabella Ingressi</title>
+  <title>Tabella Prenotazioni</title>
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <style>
     body {
@@ -52,7 +52,7 @@
     }
 
     th, td {
-      padding: 12px 15px;
+      padding: 10px;
       text-align: center;
       border-bottom: 1px solid #ddd;
     }
@@ -84,18 +84,18 @@
 </head>
 <body>
 
-  <h1>Ingressi Registrati</h1>
+  <h1>Prenotazioni Registrate</h1>
   <p id="caricamento">⏳ Caricamento dati in corso...</p>
 
-  <table id="tabella-ingressi">
+  <table id="tabella-prenotazioni">
     <thead>
       <tr>
-        <th>Data</th>
-        <th>Ora</th>
-        <th>N° Entrate Mese</th>
+        <th>Registrata il</th>
+        <th>Data prenotata</th>
+        <th>Orario</th>
         <th>Nome</th>
         <th>Cognome</th>
-        <th>Mese</th>
+        <th>Struttura</th>
       </tr>
     </thead>
     <tbody></tbody>
@@ -107,17 +107,6 @@
     const API_URL = "https://pwa-proxy-backend.onrender.com/api/proxy";
     const API_TOKEN = "supersegreto123";
 
-    function formatDateTime(isoString) {
-      const date = new Date(isoString);
-      if (isNaN(date)) return { data: "", ora: "" };
-      const giorno = String(date.getDate()).padStart(2, '0');
-      const mese = String(date.getMonth() + 1).padStart(2, '0');
-      const anno = date.getFullYear();
-      const ore = String(date.getHours()).padStart(2, '0');
-      const minuti = String(date.getMinutes()).padStart(2, '0');
-      return { data: `${giorno}/${mese}/${anno}`, ora: `${ore}:${minuti}` };
-    }
-
     fetch(API_URL, {
       method: "POST",
       headers: {
@@ -128,30 +117,27 @@
     })
     .then(res => res.json())
     .then(dati => {
-      const tbody = document.querySelector("#tabella-ingressi tbody");
+      const tbody = document.querySelector("#tabella-prenotazioni tbody");
       const nessunDato = document.getElementById("nessun-dato");
       const caricamento = document.getElementById("caricamento");
 
-      if (!Array.isArray(dati) || dati.length <= 3) {
+      if (!Array.isArray(dati) || dati.length <= 1) {
         nessunDato.style.display = "block";
         caricamento.style.display = "none";
         return;
       }
 
-      dati.slice(3).forEach(riga => {
-        if (!riga || riga.length < 5 || riga.every(cell => !cell || cell.toString().trim() === "")) return;
-
-        const { data, ora } = formatDateTime(riga[0]);
-        if (!data || !ora) return;
+      dati.slice(1).forEach(riga => {
+        if (!riga || riga.length < 6) return;
 
         const tr = document.createElement("tr");
         tr.innerHTML = `
-          <td>${data}</td>
-          <td>${ora}</td>
-          <td>${riga[1] || ""}</td>
-          <td>${riga[2] || ""}</td>
-          <td>${riga[3] || ""}</td>
-          <td>${riga[4] || ""}</td>
+          <td>${riga[0]}</td>
+          <td>${riga[1]}</td>
+          <td>${riga[2]}</td>
+          <td>${riga[3]}</td>
+          <td>${riga[4]}</td>
+          <td>${riga[5]}</td>
         `;
         tbody.appendChild(tr);
       });
