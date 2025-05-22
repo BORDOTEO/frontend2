@@ -19,9 +19,7 @@
       background-size: cover;
       background-position: center;
     }
-    <div id="top-bar" style="display: none;">
-      <button id="btn-torna-home" onclick="tornaAllaSchermataIniziale()">⬅ Torna alla home</button>
-    </div>
+
     #wrapper {
       display: flex;
       flex-direction: column;
@@ -257,20 +255,6 @@
 
       #logo {
         width: 200px;
-      }
-      #top-bar {
-        background-color: #34495e;
-        width: 100%;
-        padding: 10px;
-      }
-      
-      #btn-torna-home {
-        background: none;
-        border: none;
-        color: white;
-        font-size: 16px;
-        font-weight: bold;
-        cursor: pointer;
       }
 
     }
@@ -580,7 +564,6 @@ function tornaAllaSchermataIniziale() {
   document.getElementById('wrapper').style.display = 'none';
   document.getElementById('iframe-wrapper').style.display = 'none';
   document.getElementById('selezione-iniziale').style.display = 'flex';
-  document.getElementById('top-bar').style.display = 'none';
   localStorage.removeItem('tipoAccesso');
 }
 
@@ -589,8 +572,6 @@ function iniziaProcedura(tipo) {
   document.getElementById('selezione-iniziale').style.display = 'none';
   document.getElementById('wrapper').style.display = 'flex';
   document.getElementById('menu').value = tipo;
-  document.getElementById('top-bar').style.display = 'block';
-
   updateInputColor();
   resetInattivita();
 }
