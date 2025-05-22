@@ -261,13 +261,15 @@
 </head>
 <body>
 
-  <div id="selezione-iniziale" style="display: flex; flex-direction: column; align-items: center; justify-content: center; height: 100vh; gap: 20px; background: rgba(255, 255, 255, 0.9);">
-    <h2>Scegli il tipo di accesso</h2>
-    <button onclick="iniziaProcedura('PRENOTAZIONE')" style="padding: 15px 30px; font-size: 18px; background-color: #f1c40f; border: none; box-shadow: 0 4px #c9a602; font-weight: bold;">📅 Prenotazione</button>
-    <p style="max-width: 300px; text-align: center;">Se vuoi prenotare un accesso futuro, clicca su “Prenotazione”.</p>
-    <button onclick="iniziaProcedura('INGRESSO')" style="padding: 15px 30px; font-size: 18px; background-color: #3498db; border: none; box-shadow: 0 4px #2c80b4; font-weight: bold;">🚪 Ingresso</button>
-    <p style="max-width: 300px; text-align: center;">Se sei arrivato alla struttura e vuoi registrare il tuo ingresso ora, clicca su “Ingresso”.</p>
-  </div>
+  <div id="selezione-iniziale" style="display: flex; flex-direction: column; align-items: center; justify-content: center; height: 100vh; gap: 20px; background-image: url('https://i.imgur.com/Fg2KbHy.jpeg'); background-size: cover; background-position: center;">
+  <img id="logo-iniziale" src="https://i.imgur.com/G263KeW.png" style="width: 180px; max-width: 90%;" />
+  <h2 style="color: black;">Scegli il tipo di accesso</h2>
+  <button onclick="iniziaProcedura('PRENOTAZIONE')" style="padding: 15px 30px; font-size: 18px; background-color: #f1c40f; border: none; box-shadow: 0 4px #c9a602; font-weight: bold;">📅 Prenotazione</button>
+  <p style="max-width: 300px; text-align: center;">Se vuoi prenotare un accesso futuro, clicca su “Prenotazione”.</p>
+  <button onclick="iniziaProcedura('INGRESSO')" style="padding: 15px 30px; font-size: 18px; background-color: #3498db; border: none; box-shadow: 0 4px #2c80b4; font-weight: bold;">🚪 Ingresso</button>
+  <p style="max-width: 300px; text-align: center;">Se sei arrivato alla struttura e vuoi registrare il tuo ingresso ora, clicca su “Ingresso”.</p>
+</div>
+
 
   <div id="wrapper" style="display: none;">
     <img id="logo" src="https://i.imgur.com/G263KeW.png" />
@@ -520,10 +522,12 @@
         esitoBox.style.display = 'block';
 
         setTimeout(() => {
-          esitoBox.style.display = 'none';
-          document.getElementById('nome').value = '';
-          document.getElementById('cognome').value = '';
-        }, 5000);
+        esitoBox.style.display = 'none';
+        document.getElementById('nome').value = '';
+        document.getElementById('cognome').value = '';
+        tornaAllaSchermataIniziale();
+      }, 5000);
+
       })
       .catch(error => {
         esitoBox.textContent = 'Errore nell’avvio della macro.';
@@ -544,7 +548,48 @@
       updateInputColor();
     }
 
-    window.onload = updateInputColor;
+    let inattivitaTimer;
+
+function resetInattivita() {
+  clearTimeout(inattivitaTimer);
+  inattivitaTimer = setTimeout(() => {
+    tornaAllaSchermataIniziale();
+  }, 30000); // 30 secondi
+}
+
+function tornaAllaSchermataIniziale() {
+  document.getElementById('wrapper').style.display = 'none';
+  document.getElementById('iframe-wrapper').style.display = 'none';
+  document.getElementById('selezione-iniziale').style.display = 'flex';
+  localStorage.removeItem('tipoAccesso');
+}
+
+function iniziaProcedura(tipo) {
+  localStorage.setItem('tipoAccesso', tipo);
+  document.getElementById('selezione-iniziale').style.display = 'none';
+  document.getElementById('wrapper').style.display = 'flex';
+  document.getElementById('menu').value = tipo;
+  updateInputColor();
+  resetInattivita();
+}
+
+window.onload = function () {
+  const tipoSalvato = localStorage.getItem('tipoAccesso');
+  if (tipoSalvato) {
+    document.getElementById('selezione-iniziale').style.display = 'none';
+    document.getElementById('wrapper').style.display = 'flex';
+    document.getElementById('menu').value = tipoSalvato;
+    updateInputColor();
+  } else {
+    document.getElementById('selezione-iniziale').style.display = 'flex';
+    document.getElementById('wrapper').style.display = 'none';
+  }
+
+  document.addEventListener('mousemove', resetInattivita);
+  document.addEventListener('keydown', resetInattivita);
+  document.addEventListener('click', resetInattivita);
+};
+
   </script>
 
 </body>
