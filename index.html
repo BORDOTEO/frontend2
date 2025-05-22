@@ -6,6 +6,10 @@
   <title>SportivaNet</title>
   <link rel="manifest" href="manifest.json" />
   <style>
+    * {
+      box-sizing: border-box;
+    }
+
     html, body {
       margin: 0;
       padding: 0;
@@ -20,52 +24,23 @@
       display: flex;
       flex-direction: column;
       align-items: center;
-      padding: 20px;
+      padding: 10px;
       gap: 12px;
       height: 100vh;
-      justify-content: center;
+      overflow-y: auto;
+      justify-content: flex-start;
     }
 
-    #wrapper, #iframe-wrapper {
+    #wrapper {
       display: none;
     }
 
-    .btn-scelta {
-      width: 260px;
-      padding: 12px;
-      font-weight: bold;
-      font-size: 16px;
-      border: none;
-      border-radius: 6px;
-      cursor: pointer;
-      box-shadow: 0 4px rgba(0,0,0,0.3);
+    #iframe-wrapper {
+      display: none;
+      width: 100%;
+      height: 100vh;
+      flex-direction: column;
     }
-
-    #btn-ingresso {
-      background-color: #1abc9c;
-      color: white;
-    }
-
-    #btn-prenotazione {
-      background-color: #f39c12;
-      color: white;
-    }
-
-    .descrizione {
-      color: white;
-      text-shadow: 1px 1px 2px black;
-      max-width: 280px;
-      text-align: center;
-      margin-bottom: 10px;
-    }
-
-    /* Bottoni esistenti */
-    button, input, select {
-      font-size: 15px;
-      padding: 10px;
-    }
-
-    /* [ ... inserisci qui gli stili già presenti per #btn-inserisci, #btn-conferma, ecc. ... ] */
 
     #iframe-tabella {
       width: 100%;
@@ -89,17 +64,45 @@
       box-shadow: 0 2px #2c3e50;
     }
 
-    #iframe-wrapper {
-      display: none;
-      width: 100%;
-      height: 100vh;
-      flex-direction: column;
+    #logo {
+      display: block;
+      width: 180px;
+      max-width: 90%;
+      height: auto;
+      margin: 0;
+    }
+
+    .btn-scelta {
+      width: 250px;
+      font-size: 16px;
+      font-weight: bold;
+      padding: 12px;
+      border: none;
+      border-radius: 6px;
+      color: white;
+      cursor: pointer;
+      box-shadow: 0 4px rgba(0,0,0,0.2);
+    }
+
+    #btn-ingresso {
+      background-color: #27ae60;
+    }
+
+    #btn-prenotazione {
+      background-color: #f39c12;
+    }
+
+    .descrizione {
+      color: white;
+      text-align: center;
+      max-width: 270px;
+      text-shadow: 1px 1px 2px black;
     }
   </style>
 </head>
 <body>
-
   <div id="scelta-modalita">
+    <img id="logo" src="https://i.imgur.com/G263KeW.png" />
     <button class="btn-scelta" id="btn-ingresso" onclick="selezionaModalita('INGRESSO')">Ingresso</button>
     <div class="descrizione">Per registrare l'ingresso del cliente alla struttura</div>
     <button class="btn-scelta" id="btn-prenotazione" onclick="selezionaModalita('PRENOTAZIONE')">Prenotazione</button>
@@ -109,8 +112,12 @@
   <div id="wrapper">
     <img id="logo" src="https://i.imgur.com/G263KeW.png" />
     <button id="btn-tabella" onclick="apriTabella()">📋 Visualizza ingressi</button>
+    <select id="menu" onchange="updateInputColor()">
+      <option value="PRENOTAZIONE">PRENOTAZIONE</option>
+      <option value="INGRESSO">INGRESSO</option>
+    </select>
     <input type="text" id="codice" placeholder="PIN o Codice Ingresso" inputmode="numeric" pattern="[0-9]*" />
-    <button id="btn-inserisci" onclick="sendToSheet()">Inserisci Codice</button>
+    <button id="btn-inserisci" onclick="sendToSheet()">Inserisci PIN</button>
     <input type="text" id="nome" placeholder="Nome" readonly class="readonly-field" />
     <input type="text" id="cognome" placeholder="Cognome" readonly class="readonly-field" />
     <div id="extra-fields">
@@ -130,17 +137,14 @@
   </div>
 
   <script>
-    const API_URL = "https://pwa-proxy-backend.onrender.com/api/proxy";
-    const API_TOKEN = "supersegreto123";
-
     let currentModalita = null;
     let inactivityTimer;
 
-    function selezionaModalita(tipo) {
-      currentModalita = tipo;
+    function selezionaModalita(modalita) {
+      currentModalita = modalita;
       document.getElementById('scelta-modalita').style.display = 'none';
       document.getElementById('wrapper').style.display = 'flex';
-      document.getElementById('menu')?.remove(); // rimuove vecchio select se esiste
+      document.getElementById('menu').value = modalita;
       updateInputColor();
       resetInactivityTimer();
     }
@@ -149,183 +153,13 @@
       document.getElementById('wrapper').style.display = 'none';
       document.getElementById('iframe-wrapper').style.display = 'none';
       document.getElementById('scelta-modalita').style.display = 'flex';
-      currentModalita = null;
     }
 
     function resetInactivityTimer() {
       clearTimeout(inactivityTimer);
-      inactivityTimer = setTimeout(tornaAllaScelta, 30000);
-    }
-    document.addEventListener("click", resetInactivityTimer);
-    document.addEventListener("keydown", resetInactivityTimer);
-
-    function updateInputColor() {
-      const menuValue = currentModalita;
-      const input = document.getElementById('codice');
-      const nome = document.getElementById('nome');
-      const cognome = document.getElementById('cognome');
-      const extraFields = document.getElementById('extra-fields');
-      const dataField = document.getElementById('data');
-      const orarioField = document.getElementById('orario');
-      const bottoneInserisci = document.getElementById('btn-inserisci');
-      const bottoneConferma = document.getElementById('btn-conferma');
-      const btnTabella = document.getElementById('btn-tabella');
-
-      input.value = '';
-      nome.value = '';
-      cognome.value = '';
-      nome.classList.remove('readonly-active');
-      cognome.classList.remove('readonly-active');
-      nome.classList.add('readonly-field');
-      cognome.classList.add('readonly-field');
-      document.getElementById('error-box').style.display = 'none';
-      document.getElementById('message-box').style.display = 'none';
-      document.getElementById('esito-box').style.display = 'none';
-
-      if (menuValue === 'INGRESSO') {
-        input.placeholder = 'Codice Ingresso';
-        input.style.backgroundColor = '#ccffcc';
-        nome.style.backgroundColor = '#ccffcc';
-        cognome.style.backgroundColor = '#ccffcc';
-        extraFields.style.display = 'none';
-        bottoneInserisci.textContent = 'Inserisci Codice';
-        bottoneConferma.style.display = 'none';
-        btnTabella.textContent = '📋 Visualizza ingressi';
-      } else {
-        input.placeholder = 'PIN';
-        input.style.backgroundColor = 'yellow';
-        nome.style.backgroundColor = 'yellow';
-        cognome.style.backgroundColor = 'yellow';
-        extraFields.style.display = 'flex';
-        bottoneInserisci.textContent = 'Inserisci PIN';
-        bottoneConferma.style.display = 'inline-block';
-        btnTabella.textContent = '📋 Visualizza prenotazioni';
-
-        const today = new Date().toISOString().split('T')[0];
-        dataField.min = today;
-        dataField.value = today;
-
-        if (orarioField.children.length === 0) {
-          for (let i = 0; i < 24; i++) {
-            const option = document.createElement('option');
-            option.value = i.toString().padStart(2, '0') + ":00";
-            option.textContent = option.value;
-            orarioField.appendChild(option);
-          }
-        }
-      }
-
-      fetch(API_URL, {
-        method: 'POST',
-        headers: {
-          'Content-Type': 'application/x-www-form-urlencoded',
-          'x-api-token': API_TOKEN
-        },
-        body: new URLSearchParams({ menu: menuValue })
-      });
-    }
-
-    function sendToSheet() {
-      const menu = currentModalita;
-      const codice = document.getElementById('codice').value;
-      const errorBox = document.getElementById('error-box');
-      const messageBox = document.getElementById('message-box');
-      const esitoBox = document.getElementById('esito-box');
-      const nome = document.getElementById('nome');
-      const cognome = document.getElementById('cognome');
-
-      if (!codice.trim()) {
-        errorBox.textContent = 'Inserisci un codice.';
-        errorBox.style.display = 'block';
-        messageBox.style.display = 'none';
-        esitoBox.style.display = 'none';
-        setTimeout(() => errorBox.style.display = 'none', 5000);
-        return;
-      }
-
-      fetch(API_URL, {
-        method: 'POST',
-        headers: {
-          'Content-Type': 'application/x-www-form-urlencoded',
-          'x-api-token': API_TOKEN
-        },
-        body: new URLSearchParams({ menu, codice })
-      })
-      .then(response => response.json())
-      .then(data => {
-        errorBox.style.display = 'none';
-        messageBox.style.display = 'none';
-
-        if (data.verifica === 'Codice Inesistente') {
-          document.getElementById('codice').value = '';
-          nome.value = '';
-          cognome.value = '';
-          nome.classList.remove('readonly-active');
-          cognome.classList.remove('readonly-active');
-          nome.classList.add('readonly-field');
-          cognome.classList.add('readonly-field');
-          errorBox.textContent = 'Codice non trovato.';
-          errorBox.style.display = 'block';
-          setTimeout(() => errorBox.style.display = 'none', 5000);
-        } else {
-          nome.value = data.nome || '';
-          cognome.value = data.cognome || '';
-          nome.classList.remove('readonly-field');
-          cognome.classList.remove('readonly-field');
-          nome.classList.add('readonly-active');
-          cognome.classList.add('readonly-active');
-          document.getElementById('codice').value = '';
-        }
-
-        if (data.messaggio) {
-          esitoBox.textContent = data.messaggio;
-          esitoBox.style.display = 'block';
-          esitoBox.style.fontSize = '22px';
-          esitoBox.style.fontWeight = 'bold';
-          setTimeout(() => esitoBox.style.display = 'none', 5000);
-        }
-      })
-      .catch(error => {
-        errorBox.textContent = 'Errore durante l’invio.';
-        errorBox.style.display = 'block';
-        esitoBox.style.display = 'none';
-        setTimeout(() => errorBox.style.display = 'none', 5000);
-        console.error(error);
-      });
-    }
-
-    function confermaDataOra() {
-      const data = document.getElementById('data').value;
-      const orario = document.getElementById('orario').value;
-      const errorBox = document.getElementById('error-box');
-      const messageBox = document.getElementById('message-box');
-
-      if (!data || !orario) {
-        errorBox.textContent = 'Seleziona data e orario.';
-        errorBox.style.display = 'block';
-        setTimeout(() => errorBox.style.display = 'none', 5000);
-        return;
-      }
-
-      fetch(API_URL, {
-        method: 'POST',
-        headers: {
-          'Content-Type': 'application/x-www-form-urlencoded',
-          'x-api-token': API_TOKEN
-        },
-        body: new URLSearchParams({ data, orario })
-      })
-      .then(() => {
-        messageBox.textContent = 'Data e orario aggiornati con successo.';
-        messageBox.style.display = 'block';
-        setTimeout(() => messageBox.style.display = 'none', 5000);
-      })
-      .catch(error => {
-        errorBox.textContent = 'Errore durante la conferma.';
-        errorBox.style.display = 'block';
-        setTimeout(() => errorBox.style.display = 'none', 5000);
-        console.error(error);
-      });
+      inactivityTimer = setTimeout(() => {
+        tornaAllaScelta();
+      }, 30000);
     }
 
     function registrazioneFinale() {
@@ -336,11 +170,11 @@
       btn.textContent = '⏳ Attendere...';
       esitoBox.style.display = 'none';
 
-      fetch(API_URL, {
+      fetch("https://pwa-proxy-backend.onrender.com/api/proxy", {
         method: 'POST',
         headers: {
           'Content-Type': 'application/x-www-form-urlencoded',
-          'x-api-token': API_TOKEN
+          'x-api-token': 'supersegreto123'
         },
         body: new URLSearchParams({ azione: 'eseguiMacro' })
       })
@@ -357,7 +191,7 @@
           esitoBox.style.display = 'none';
           document.getElementById('nome').value = '';
           document.getElementById('cognome').value = '';
-          tornaAllaScelta(); // Torna alla schermata iniziale dopo registrazione
+          tornaAllaScelta();
         }, 5000);
       })
       .catch(error => {
@@ -372,28 +206,8 @@
       });
     }
 
-    function apriTabella() {
-      const menuValue = currentModalita;
-      document.getElementById('wrapper').style.display = 'none';
-      document.getElementById('iframe-wrapper').style.display = 'flex';
-
-      if (menuValue === 'INGRESSO') {
-        document.getElementById('iframe-tabella').src = 'tabella_ingressi.html';
-      } else if (menuValue === 'PRENOTAZIONE') {
-        document.getElementById('iframe-tabella').src = 'tabella_prenotazioni.html';
-      }
-    }
-
-    function chiudiTabella() {
-      document.getElementById('iframe-wrapper').style.display = 'none';
-      document.getElementById('iframe-tabella').src = '';
-      document.getElementById('wrapper').style.display = 'flex';
-    }
-
-    window.onload = () => {
-      document.getElementById('scelta-modalita').style.display = 'flex';
-    };
+    document.addEventListener("click", resetInactivityTimer);
+    document.addEventListener("keydown", resetInactivityTimer);
   </script>
-
 </body>
 </html>
