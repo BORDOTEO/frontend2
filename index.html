@@ -74,6 +74,28 @@
       width: 270px;
     }
 
+    /* --- Giallo moderno per input/select --- */
+    input[type="text"],
+    #menu,
+    #extra-fields input[type="date"],
+    #extra-fields select {
+      background-color: #fff59d;
+      border: 1px solid #e6d800;
+      color: #333;
+      border-radius: 6px;
+      box-shadow: inset 0 1px 2px rgba(0, 0, 0, 0.1);
+      transition: box-shadow 0.2s;
+    }
+
+    input[type="text"]:focus,
+    #menu:focus,
+    #extra-fields input[type="date"]:focus,
+    #extra-fields select:focus {
+      box-shadow: 0 0 0 3px rgba(255, 245, 157, 0.5);
+      outline: none;
+    }
+
+    /* Visualizza tabella */
     #btn-tabella {
       width: 250px;
       white-space: nowrap;
@@ -94,12 +116,13 @@
       box-shadow: 0 2px #1f6390;
     }
 
+    /* Inserisci codice / PIN */
     #btn-inserisci {
       font-weight: bold;
-      background-color: #5dade2;
+      background-color: #4a90e2;
       color: white;
       border: none;
-      box-shadow: 0 4px #3498db;
+      box-shadow: 0 4px #357ab8;
       transition: all 0.2s ease;
       width: 220px;
     }
@@ -110,15 +133,16 @@
 
     #btn-inserisci:active {
       transform: translateY(2px);
-      box-shadow: 0 2px #3498db;
+      box-shadow: 0 2px #357ab8;
     }
 
+    /* Conferma Data e Ora */
     #btn-conferma {
       font-weight: bold;
-      background-color: #85c1e9;
+      background-color: #5c6bc0;
       color: white;
       border: none;
-      box-shadow: 0 4px #5499c7;
+      box-shadow: 0 4px #3f51b5;
       transition: all 0.2s ease;
       width: 220px;
       margin-top: 6px;
@@ -131,9 +155,10 @@
 
     #btn-conferma:active {
       transform: translateY(2px);
-      box-shadow: 0 2px #5499c7;
+      box-shadow: 0 2px #3f51b5;
     }
 
+    /* REGISTRA */
     #btn-registrazione {
       background-color: #27ae60;
       color: white;
@@ -165,13 +190,6 @@
       justify-content: center;
     }
 
-    #extra-fields input[type="date"],
-    #extra-fields select {
-      width: 130px;
-      font-size: 14px;
-      padding: 9px;
-    }
-
     #error-box, #message-box, #esito-box {
       max-width: 270px;
       font-size: 18px;
@@ -198,7 +216,7 @@
     }
 
     .readonly-field {
-      background-color: #e0e0e0;
+      background-color: #f0f0c0;
       color: #777;
       border: 1px solid #bbb;
     }
