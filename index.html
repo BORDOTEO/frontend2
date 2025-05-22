@@ -45,15 +45,25 @@
     .top-btn,
     #btn-chiudi-tabella,
     #btn-home {
-      padding: 10px;
-      font-weight: bold;
-      background-color: #34495e;
-      color: white;
-      border: none;
-      width: 100%;
-      cursor: pointer;
-      box-shadow: 0 4px #2c3e50;
-    }
+  background-color: rgba(0, 0, 0, 0.4); /* semitrasparente */
+  color: white;
+  font-weight: normal;
+  border: none;
+  padding: 10px;
+  width: 100%;
+  cursor: pointer;
+  transition: background-color 0.3s;
+  font-size: 16px;
+}
+
+#btn-home:hover {
+  background-color: rgba(0, 0, 0, 0.6); /* un po' più visibile al passaggio */
+}
+
+#btn-home:active {
+  background-color: rgba(0, 0, 0, 0.8);
+}
+
 
     .top-btn:active,
     #btn-chiudi-tabella:active,
