@@ -65,7 +65,7 @@
     }
 
     tbody tr {
-      background-color: #e6f9e6; /* verde chiaro */
+      background-color: #fff9e6; /* giallo molto chiaro */
     }
 
     tr:hover {
@@ -80,11 +80,41 @@
       text-shadow: 1px 1px 2px black;
       display: none;
     }
+
+    #filtro-mese-container {
+      margin-top: 10px;
+      text-align: center;
+    }
+
+    #filtro-mese {
+      padding: 5px;
+      font-size: 14px;
+    }
   </style>
 </head>
 <body>
 
   <h1>Ingressi Registrati</h1>
+
+  <div id="filtro-mese-container">
+    <label for="filtro-mese" style="color: white; text-shadow: 1px 1px 2px black; margin-right: 8px;">Filtra per mese:</label>
+    <select id="filtro-mese">
+      <option value="">Tutti</option>
+      <option value="01">Gennaio</option>
+      <option value="02">Febbraio</option>
+      <option value="03">Marzo</option>
+      <option value="04">Aprile</option>
+      <option value="05">Maggio</option>
+      <option value="06">Giugno</option>
+      <option value="07">Luglio</option>
+      <option value="08">Agosto</option>
+      <option value="09">Settembre</option>
+      <option value="10">Ottobre</option>
+      <option value="11">Novembre</option>
+      <option value="12">Dicembre</option>
+    </select>
+  </div>
+
   <p id="caricamento">⏳ Caricamento dati in corso...</p>
 
   <table id="tabella-ingressi">
@@ -107,15 +137,21 @@
     const API_URL = "https://pwa-proxy-backend.onrender.com/api/proxy";
     const API_TOKEN = "supersegreto123";
 
+    const tbody = document.querySelector("#tabella-ingressi tbody");
+    const nessunDato = document.getElementById("nessun-dato");
+    const caricamento = document.getElementById("caricamento");
+    const filtroMese = document.getElementById("filtro-mese");
+    let datiIngressi = [];
+
     function formatDateTime(isoString) {
       const date = new Date(isoString);
-      if (isNaN(date)) return { data: "", ora: "" };
+      if (isNaN(date)) return { data: "", ora: "", mese: "" };
       const giorno = String(date.getDate()).padStart(2, '0');
       const mese = String(date.getMonth() + 1).padStart(2, '0');
       const anno = date.getFullYear();
       const ore = String(date.getHours()).padStart(2, '0');
       const minuti = String(date.getMinutes()).padStart(2, '0');
-      return { data: `${giorno}/${mese}/${anno}`, ora: `${ore}:${minuti}` };
+      return { data: `${giorno}/${mese}/${anno}`, ora: `${ore}:${minuti}`, mese };
     }
 
     fetch(API_URL, {
@@ -128,46 +164,56 @@
     })
     .then(res => res.json())
     .then(dati => {
-      const tbody = document.querySelector("#tabella-ingressi tbody");
-      const nessunDato = document.getElementById("nessun-dato");
-      const caricamento = document.getElementById("caricamento");
-
       if (!Array.isArray(dati) || dati.length <= 3) {
         nessunDato.style.display = "block";
         caricamento.style.display = "none";
         return;
       }
 
-      dati.slice(3).forEach(riga => {
-        if (!riga || riga.length < 5 || riga.every(cell => !cell || cell.toString().trim() === "")) return;
+      datiIngressi = dati.slice(3).map(riga => {
+        if (!riga || riga.length < 5 || riga.every(cell => !cell || cell.toString().trim() === "")) return null;
+        const { data, ora, mese } = formatDateTime(riga[0]);
+        return data ? [data, ora, riga[1] || "", riga[2] || "", riga[3] || "", riga[4] || "", mese] : null;
+      }).filter(Boolean);
 
-        const { data, ora } = formatDateTime(riga[0]);
-        if (!data || !ora) return;
-
-        const tr = document.createElement("tr");
-        tr.innerHTML = `
-          <td>${data}</td>
-          <td>${ora}</td>
-          <td>${riga[1] || ""}</td>
-          <td>${riga[2] || ""}</td>
-          <td>${riga[3] || ""}</td>
-          <td>${riga[4] || ""}</td>
-        `;
-        tbody.appendChild(tr);
-      });
-
-      if (!tbody.hasChildNodes()) {
-        nessunDato.style.display = "block";
-      }
-
+      aggiornaTabella();
       caricamento.style.display = "none";
     })
     .catch(err => {
       console.error("Errore nel caricamento dati:", err);
-      document.getElementById("caricamento").textContent = "❌ Errore nel caricamento dati.";
+      caricamento.textContent = "❌ Errore nel caricamento dati.";
     });
+
+    filtroMese.addEventListener("change", aggiornaTabella);
+
+    function aggiornaTabella() {
+      tbody.innerHTML = "";
+      const meseSelezionato = filtroMese.value;
+
+      const filtrati = meseSelezionato
+        ? datiIngressi.filter(r => r[6] === meseSelezionato)
+        : datiIngressi;
+
+      if (filtrati.length === 0) {
+        nessunDato.style.display = "block";
+        return;
+      }
+
+      nessunDato.style.display = "none";
+      filtrati.forEach(r => {
+        const tr = document.createElement("tr");
+        tr.innerHTML = `
+          <td>${r[0]}</td>
+          <td>${r[1]}</td>
+          <td>${r[2]}</td>
+          <td>${r[3]}</td>
+          <td>${r[4]}</td>
+          <td>${r[5]}</td>
+        `;
+        tbody.appendChild(tr);
+      });
+    }
   </script>
 
 </body>
 </html>
-
