@@ -6,9 +6,7 @@
   <title>SportivaNet</title>
   <link rel="manifest" href="manifest.json" />
   <style>
-    * {
-      box-sizing: border-box;
-    }
+    * { box-sizing: border-box; }
 
     html, body {
       margin: 0;
@@ -40,11 +38,13 @@
 
     #iframe-tabella {
       width: 100%;
-      height: calc(100vh - 50px);
+      height: calc(100vh - 100px);
       border: none;
     }
 
-    #btn-chiudi-tabella {
+    .top-btn,
+    #btn-chiudi-tabella,
+    #btn-home {
       padding: 10px;
       font-weight: bold;
       background-color: #34495e;
@@ -55,7 +55,9 @@
       box-shadow: 0 4px #2c3e50;
     }
 
-    #btn-chiudi-tabella:active {
+    .top-btn:active,
+    #btn-chiudi-tabella:active,
+    #btn-home:active {
       transform: translateY(2px);
       box-shadow: 0 2px #2c3e50;
     }
@@ -73,7 +75,6 @@
       padding: 10px;
     }
 
-    /* --- Giallo moderno per input/select --- */
     input[type="text"],
     #menu {
       background-color: #fff59d;
@@ -91,7 +92,6 @@
       outline: none;
     }
 
-    /* Visualizza tabella */
     #btn-tabella {
       width: 250px;
       white-space: nowrap;
@@ -103,37 +103,30 @@
       transition: all 0.2s ease;
     }
 
-    #btn-tabella:hover {
-      filter: brightness(1.1);
-    }
+    #btn-tabella:hover { filter: brightness(1.1); }
 
     #btn-tabella:active {
       transform: translateY(2px);
       box-shadow: 0 2px #1f6390;
     }
 
-    /* Inserisci codice / PIN */
     #btn-inserisci {
-  font-weight: bold;
-  background-color: #5c6bc0;
-  color: white;
-  border: none;
-  box-shadow: 0 4px #3f51b5;
-  transition: all 0.2s ease;
-  width: 220px;
-}
+      font-weight: bold;
+      background-color: #5c6bc0;
+      color: white;
+      border: none;
+      box-shadow: 0 4px #3f51b5;
+      transition: all 0.2s ease;
+      width: 220px;
+    }
 
-#btn-inserisci:hover {
-  filter: brightness(1.1);
-}
+    #btn-inserisci:hover { filter: brightness(1.1); }
 
-#btn-inserisci:active {
-  transform: translateY(2px);
-  box-shadow: 0 2px #3f51b5;
-}
+    #btn-inserisci:active {
+      transform: translateY(2px);
+      box-shadow: 0 2px #3f51b5;
+    }
 
-
-    /* Conferma Data e Ora */
     #btn-conferma {
       font-weight: bold;
       background-color: #5c6bc0;
@@ -146,16 +139,13 @@
       margin-bottom: 6px;
     }
 
-    #btn-conferma:hover {
-      filter: brightness(1.1);
-    }
+    #btn-conferma:hover { filter: brightness(1.1); }
 
     #btn-conferma:active {
       transform: translateY(2px);
       box-shadow: 0 2px #3f51b5;
     }
 
-    /* REGISTRA */
     #btn-registrazione {
       background-color: #27ae60;
       color: white;
@@ -166,9 +156,7 @@
       width: 220px;
     }
 
-    #btn-registrazione:hover {
-      filter: brightness(1.1);
-    }
+    #btn-registrazione:hover { filter: brightness(1.1); }
 
     #btn-registrazione:active {
       transform: translateY(2px);
@@ -188,7 +176,6 @@
       justify-content: center;
     }
 
-    /* Data e ora corretti */
     #extra-fields input[type="date"],
     #extra-fields select {
       width: 125px;
@@ -210,20 +197,9 @@
       display: none;
     }
 
-    #error-box {
-      background-color: #ffe0e0;
-      color: #900;
-    }
-
-    #message-box {
-      background-color: #fff3cd;
-      color: #856404;
-    }
-
-    #esito-box {
-      background-color: #d4edda;
-      color: #155724;
-    }
+    #error-box { background-color: #ffe0e0; color: #900; }
+    #message-box { background-color: #fff3cd; color: #856404; }
+    #esito-box { background-color: #d4edda; color: #155724; }
 
     .readonly-field {
       background-color: #f0f0c0;
@@ -238,48 +214,40 @@
     }
 
     @media only screen and (max-width: 600px) {
-      button, input, select {
-        font-size: 16px;
-      }
+      button, input, select { font-size: 16px; }
 
-      #btn-inserisci,
-      #btn-conferma,
-      #btn-registrazione {
+      #btn-inserisci, #btn-conferma, #btn-registrazione {
         width: 240px;
       }
 
-      #extra-fields input,
-      #extra-fields select {
+      #extra-fields input, #extra-fields select {
         width: 145px;
       }
 
       #logo {
         width: 200px;
       }
-
     }
   </style>
 </head>
 <body>
 
   <div id="selezione-iniziale" style="display: flex; flex-direction: column; align-items: center; justify-content: center; height: 100vh; gap: 20px; background-image: url('https://i.imgur.com/Fg2KbHy.jpeg'); background-size: cover; background-position: center;">
-  <img id="logo-iniziale" src="https://i.imgur.com/G263KeW.png" style="width: 180px; max-width: 90%;" />
-  <h2 style="color: black;">Seleziona una funzione</h2>
-  <button onclick="iniziaProcedura('PRENOTAZIONE')" style="padding: 15px 30px; font-size: 18px; background-color: #ffeb3b; border: none; box-shadow: 0 4px #c8b900; font-weight: bold;">
-  🗓️ Prenotazione
-</button>
-  <p style="max-width: 300px; text-align: center;">Se il cliente vuole prenotare un futuro accesso, clicca su “Prenotazione”.</p>
+    <img id="logo-iniziale" src="https://i.imgur.com/G263KeW.png" style="width: 180px; max-width: 90%;" />
+    <h2 style="color: black;">Seleziona una funzione</h2>
+    <button onclick="iniziaProcedura('PRENOTAZIONE')" style="padding: 15px 30px; font-size: 18px; background-color: #ffeb3b; border: none; box-shadow: 0 4px #c8b900; font-weight: bold;">
+      🗓️ Prenotazione
+    </button>
+    <p style="max-width: 300px; text-align: center;">Se il cliente vuole prenotare un futuro accesso, clicca su “Prenotazione”.</p>
 
-<!-- Ingresso -->
-<button onclick="iniziaProcedura('INGRESSO')" style="padding: 15px 30px; font-size: 18px; background-color: #66bb6a; border: none; box-shadow: 0 4px #4caf50; font-weight: bold;">
-  🔓 Ingresso
-</button>
-  <p style="max-width: 300px; text-align: center;">Se il cliente è arrivato alla struttura e vuole registrare il suo ingresso ora, clicca su “Ingresso”.</p>
-
-</div>
-
+    <button onclick="iniziaProcedura('INGRESSO')" style="padding: 15px 30px; font-size: 18px; background-color: #66bb6a; border: none; box-shadow: 0 4px #4caf50; font-weight: bold;">
+      🔓 Ingresso
+    </button>
+    <p style="max-width: 300px; text-align: center;">Se il cliente è arrivato alla struttura e vuole registrare il suo ingresso ora, clicca su “Ingresso”.</p>
+  </div>
 
   <div id="wrapper" style="display: none;">
+    <button id="btn-home" onclick="tornaAllaSchermataIniziale()">🏠 Torna alla home</button>
     <img id="logo" src="https://i.imgur.com/G263KeW.png" />
     <button id="btn-tabella" onclick="apriTabella()">📋 Visualizza ingressi</button>
     <select id="menu" onchange="updateInputColor()">
@@ -305,6 +273,7 @@
     <button id="btn-chiudi-tabella" onclick="chiudiTabella()">⬅ Torna indietro</button>
     <iframe id="iframe-tabella"></iframe>
   </div>
+
 
   <script>
     const API_URL = "https://pwa-proxy-backend.onrender.com/api/proxy";
