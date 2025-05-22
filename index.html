@@ -71,26 +71,22 @@
     button, input, select {
       font-size: 15px;
       padding: 10px;
-      width: 270px;
     }
 
     /* --- Giallo moderno per input/select --- */
     input[type="text"],
-    #menu,
-    #extra-fields input[type="date"],
-    #extra-fields select {
+    #menu {
       background-color: #fff59d;
       border: 1px solid #e6d800;
       color: #333;
       border-radius: 6px;
       box-shadow: inset 0 1px 2px rgba(0, 0, 0, 0.1);
       transition: box-shadow 0.2s;
+      width: 270px;
     }
 
     input[type="text"]:focus,
-    #menu:focus,
-    #extra-fields input[type="date"]:focus,
-    #extra-fields select:focus {
+    #menu:focus {
       box-shadow: 0 0 0 3px rgba(255, 245, 157, 0.5);
       outline: none;
     }
@@ -166,6 +162,7 @@
       box-shadow: 0 4px #1e8449;
       border: none;
       transition: all 0.2s ease;
+      width: 220px;
     }
 
     #btn-registrazione:hover {
@@ -188,6 +185,18 @@
       gap: 10px;
       flex-wrap: wrap;
       justify-content: center;
+    }
+
+    /* Data e ora corretti */
+    #extra-fields input[type="date"],
+    #extra-fields select {
+      width: 125px;
+      font-size: 15px;
+      padding: 9px;
+      border-radius: 6px;
+      background-color: #fff59d;
+      border: 1px solid #e6d800;
+      box-shadow: inset 0 1px 2px rgba(0, 0, 0, 0.1);
     }
 
     #error-box, #message-box, #esito-box {
@@ -229,12 +238,12 @@
 
     @media only screen and (max-width: 600px) {
       button, input, select {
-        width: 300px;
         font-size: 16px;
       }
 
       #btn-inserisci,
-      #btn-conferma {
+      #btn-conferma,
+      #btn-registrazione {
         width: 240px;
       }
 
