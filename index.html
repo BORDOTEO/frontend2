@@ -77,46 +77,85 @@
     #btn-tabella {
       width: 250px;
       white-space: nowrap;
-      background-color: #3498db;
+      background-color: #2980b9;
       color: white;
       font-weight: bold;
       border: none;
-      margin-bottom: 4px;
+      box-shadow: 0 4px #1f6390;
+      transition: all 0.2s ease;
     }
 
     #btn-tabella:hover {
-      background-color: #2980b9;
+      filter: brightness(1.1);
     }
 
-    #btn-inserisci, #btn-conferma {
+    #btn-tabella:active {
+      transform: translateY(2px);
+      box-shadow: 0 2px #1f6390;
+    }
+
+    #btn-inserisci {
       font-weight: bold;
-      border: 2px solid #555;
-      background-color: #f0f0f0;
-      transition: all 0.15s ease;
-      box-shadow: 0 4px #999;
+      background-color: #5dade2;
+      color: white;
+      border: none;
+      box-shadow: 0 4px #3498db;
+      transition: all 0.2s ease;
       width: 220px;
     }
 
-    #btn-inserisci:active, #btn-conferma:active {
+    #btn-inserisci:hover {
+      filter: brightness(1.1);
+    }
+
+    #btn-inserisci:active {
       transform: translateY(2px);
-      box-shadow: 0 2px #666;
-      background-color: #e0e0e0;
+      box-shadow: 0 2px #3498db;
     }
 
     #btn-conferma {
+      font-weight: bold;
+      background-color: #85c1e9;
+      color: white;
+      border: none;
+      box-shadow: 0 4px #5499c7;
+      transition: all 0.2s ease;
+      width: 220px;
       margin-top: 6px;
       margin-bottom: 6px;
     }
 
+    #btn-conferma:hover {
+      filter: brightness(1.1);
+    }
+
+    #btn-conferma:active {
+      transform: translateY(2px);
+      box-shadow: 0 2px #5499c7;
+    }
+
     #btn-registrazione {
-      background-color: #00b894;
+      background-color: #27ae60;
       color: white;
       font-weight: bold;
+      box-shadow: 0 4px #1e8449;
+      border: none;
+      transition: all 0.2s ease;
+    }
+
+    #btn-registrazione:hover {
+      filter: brightness(1.1);
+    }
+
+    #btn-registrazione:active {
+      transform: translateY(2px);
+      box-shadow: 0 2px #1e8449;
     }
 
     #btn-registrazione:disabled {
       background-color: #aaa;
       cursor: not-allowed;
+      box-shadow: none;
     }
 
     #extra-fields {
@@ -215,11 +254,11 @@
     <div id="message-box"></div>
   </div>
 
-    <div id="iframe-wrapper">
+  <div id="iframe-wrapper">
     <button id="btn-chiudi-tabella" onclick="chiudiTabella()">⬅ Torna indietro</button>
     <iframe id="iframe-tabella"></iframe>
   </div>
-  
+
   <script>
     const API_URL = "https://pwa-proxy-backend.onrender.com/api/proxy";
     const API_TOKEN = "supersegreto123";
@@ -463,5 +502,6 @@
 
     window.onload = updateInputColor;
   </script>
+   
 </body>
 </html>
