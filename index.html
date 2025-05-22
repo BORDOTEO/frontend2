@@ -1,4 +1,4 @@
-<!DOCTYPE html>
+tml>
 <html lang="it">
 <head>
   <meta charset="UTF-8" />
@@ -20,7 +20,15 @@
       background-position: center;
     }
 
-    #scelta-modalita, #wrapper {
+    <div id="selezione-iniziale" style="display: flex; flex-direction: column; align-items: center; justify-content: center; height: 100vh; gap: 20px; background: rgba(255, 255, 255, 0.9);">
+      <h2>Scegli il tipo di accesso</h2>
+      <button onclick="iniziaProcedura('PRENOTAZIONE')" style="padding: 15px 30px; font-size: 18px; background-color: #f1c40f; border: none; box-shadow: 0 4px #c9a602; font-weight: bold;">📅 Prenotazione</button>
+      <p style="max-width: 300px; text-align: center;">Se vuoi prenotare un accesso futuro, clicca su “Prenotazione”.</p>
+      <button onclick="iniziaProcedura('INGRESSO')" style="padding: 15px 30px; font-size: 18px; background-color: #3498db; border: none; box-shadow: 0 4px #2c80b4; font-weight: bold;">🚪 Ingresso</button>
+      <p style="max-width: 300px; text-align: center;">Se sei arrivato alla struttura e vuoi registrare il tuo ingresso ora, clicca su “Ingresso”.</p>
+    </div>
+
+    #wrapper {
       display: flex;
       flex-direction: column;
       align-items: center;
@@ -29,10 +37,6 @@
       height: 100vh;
       overflow-y: auto;
       justify-content: flex-start;
-    }
-
-    #wrapper {
-      display: none;
     }
 
     #iframe-wrapper {
@@ -72,44 +76,199 @@
       margin: 0;
     }
 
-    .btn-scelta {
+    button, input, select {
+      font-size: 15px;
+      padding: 10px;
+    }
+
+    /* --- Giallo moderno per input/select --- */
+    input[type="text"],
+    #menu {
+      background-color: #fff59d;
+      border: 1px solid #e6d800;
+      color: #333;
+      border-radius: 6px;
+      box-shadow: inset 0 1px 2px rgba(0, 0, 0, 0.1);
+      transition: box-shadow 0.2s;
+      width: 270px;
+    }
+
+    input[type="text"]:focus,
+    #menu:focus {
+      box-shadow: 0 0 0 3px rgba(255, 245, 157, 0.5);
+      outline: none;
+    }
+
+    /* Visualizza tabella */
+    #btn-tabella {
       width: 250px;
-      font-size: 16px;
+      white-space: nowrap;
+      background-color: #2980b9;
+      color: white;
+      font-weight: bold;
+      border: none;
+      box-shadow: 0 4px #1f6390;
+      transition: all 0.2s ease;
+    }
+
+    #btn-tabella:hover {
+      filter: brightness(1.1);
+    }
+
+    #btn-tabella:active {
+      transform: translateY(2px);
+      box-shadow: 0 2px #1f6390;
+    }
+
+    /* Inserisci codice / PIN */
+    #btn-inserisci {
+  font-weight: bold;
+  background-color: #5c6bc0;
+  color: white;
+  border: none;
+  box-shadow: 0 4px #3f51b5;
+  transition: all 0.2s ease;
+  width: 220px;
+}
+
+#btn-inserisci:hover {
+  filter: brightness(1.1);
+}
+
+#btn-inserisci:active {
+  transform: translateY(2px);
+  box-shadow: 0 2px #3f51b5;
+}
+
+
+    /* Conferma Data e Ora */
+    #btn-conferma {
+      font-weight: bold;
+      background-color: #5c6bc0;
+      color: white;
+      border: none;
+      box-shadow: 0 4px #3f51b5;
+      transition: all 0.2s ease;
+      width: 220px;
+      margin-top: 6px;
+      margin-bottom: 6px;
+    }
+
+    #btn-conferma:hover {
+      filter: brightness(1.1);
+    }
+
+    #btn-conferma:active {
+      transform: translateY(2px);
+      box-shadow: 0 2px #3f51b5;
+    }
+
+    /* REGISTRA */
+    #btn-registrazione {
+      background-color: #27ae60;
+      color: white;
+      font-weight: bold;
+      box-shadow: 0 4px #1e8449;
+      border: none;
+      transition: all 0.2s ease;
+      width: 220px;
+    }
+
+    #btn-registrazione:hover {
+      filter: brightness(1.1);
+    }
+
+    #btn-registrazione:active {
+      transform: translateY(2px);
+      box-shadow: 0 2px #1e8449;
+    }
+
+    #btn-registrazione:disabled {
+      background-color: #aaa;
+      cursor: not-allowed;
+      box-shadow: none;
+    }
+
+    #extra-fields {
+      display: flex;
+      gap: 10px;
+      flex-wrap: wrap;
+      justify-content: center;
+    }
+
+    /* Data e ora corretti */
+    #extra-fields input[type="date"],
+    #extra-fields select {
+      width: 125px;
+      font-size: 15px;
+      padding: 9px;
+      border-radius: 6px;
+      background-color: #fff59d;
+      border: 1px solid #e6d800;
+      box-shadow: inset 0 1px 2px rgba(0, 0, 0, 0.1);
+    }
+
+    #error-box, #message-box, #esito-box {
+      max-width: 270px;
+      font-size: 18px;
       font-weight: bold;
       padding: 12px;
-      border: none;
       border-radius: 6px;
-      color: white;
-      cursor: pointer;
-      box-shadow: 0 4px rgba(0,0,0,0.2);
-    }
-
-    #btn-ingresso {
-      background-color: #27ae60;
-    }
-
-    #btn-prenotazione {
-      background-color: #f39c12;
-    }
-
-    .descrizione {
-      color: white;
       text-align: center;
-      max-width: 270px;
-      text-shadow: 1px 1px 2px black;
+      display: none;
+    }
+
+    #error-box {
+      background-color: #ffe0e0;
+      color: #900;
+    }
+
+    #message-box {
+      background-color: #fff3cd;
+      color: #856404;
+    }
+
+    #esito-box {
+      background-color: #d4edda;
+      color: #155724;
+    }
+
+    .readonly-field {
+      background-color: #f0f0c0;
+      color: #777;
+      border: 1px solid #bbb;
+    }
+
+    .readonly-active {
+      background-color: white;
+      color: black;
+      border: 1px solid #ccc;
+    }
+
+    @media only screen and (max-width: 600px) {
+      button, input, select {
+        font-size: 16px;
+      }
+
+      #btn-inserisci,
+      #btn-conferma,
+      #btn-registrazione {
+        width: 240px;
+      }
+
+      #extra-fields input,
+      #extra-fields select {
+        width: 145px;
+      }
+
+      #logo {
+        width: 200px;
+      }
     }
   </style>
 </head>
 <body>
-  <div id="scelta-modalita">
-    <img id="logo" src="https://i.imgur.com/G263KeW.png" />
-    <button class="btn-scelta" id="btn-ingresso" onclick="selezionaModalita('INGRESSO')">Ingresso</button>
-    <div class="descrizione">Per registrare l'ingresso del cliente alla struttura</div>
-    <button class="btn-scelta" id="btn-prenotazione" onclick="selezionaModalita('PRENOTAZIONE')">Prenotazione</button>
-    <div class="descrizione">Per prenotare una data e orario di accesso alla struttura</div>
-  </div>
-
-  <div id="wrapper">
+  <div id="wrapper<div id="wrapper" style="display: none;">
     <img id="logo" src="https://i.imgur.com/G263KeW.png" />
     <button id="btn-tabella" onclick="apriTabella()">📋 Visualizza ingressi</button>
     <select id="menu" onchange="updateInputColor()">
@@ -137,29 +296,201 @@
   </div>
 
   <script>
-    let currentModalita = null;
-    let inactivityTimer;
+    const API_URL = "https://pwa-proxy-backend.onrender.com/api/proxy";
+    const API_TOKEN = "supersegreto123";
 
-    function selezionaModalita(modalita) {
-      currentModalita = modalita;
-      document.getElementById('scelta-modalita').style.display = 'none';
-      document.getElementById('wrapper').style.display = 'flex';
-      document.getElementById('menu').value = modalita;
-      updateInputColor();
-      resetInactivityTimer();
-    }
+    function apriTabella() {
+  const menuValue = document.getElementById('menu').value;
+  document.getElementById('wrapper').style.display = 'none';
+  document.getElementById('iframe-wrapper').style.display = 'flex';
 
-    function tornaAllaScelta() {
-      document.getElementById('wrapper').style.display = 'none';
+  if (menuValue === 'INGRESSO') {
+    document.getElementById('iframe-tabella').src = 'tabella_ingressi.html';
+  } else if (menuValue === 'PRENOTAZIONE') {
+    document.getElementById('iframe-tabella').src = 'tabella_prenotazioni.html';
+  }
+}
+
+
+    function chiudiTabella() {
       document.getElementById('iframe-wrapper').style.display = 'none';
-      document.getElementById('scelta-modalita').style.display = 'flex';
+      document.getElementById('iframe-tabella').src = '';
+      document.getElementById('wrapper').style.display = 'flex';
     }
 
-    function resetInactivityTimer() {
-      clearTimeout(inactivityTimer);
-      inactivityTimer = setTimeout(() => {
-        tornaAllaScelta();
-      }, 30000);
+    function updateInputColor() {
+      const menu = document.getElementById('menu');
+      const input = document.getElementById('codice');
+      const nome = document.getElementById('nome');
+      const cognome = document.getElementById('cognome');
+      const extraFields = document.getElementById('extra-fields');
+      const dataField = document.getElementById('data');
+      const orarioField = document.getElementById('orario');
+      const bottoneInserisci = document.getElementById('btn-inserisci');
+      const bottoneConferma = document.getElementById('btn-conferma');
+      const btnTabella = document.getElementById('btn-tabella');
+
+      input.value = '';
+      nome.value = '';
+      cognome.value = '';
+      nome.classList.remove('readonly-active');
+      cognome.classList.remove('readonly-active');
+      nome.classList.add('readonly-field');
+      cognome.classList.add('readonly-field');
+      document.getElementById('error-box').style.display = 'none';
+      document.getElementById('message-box').style.display = 'none';
+      document.getElementById('esito-box').style.display = 'none';
+
+      const menuValue = menu.value;
+
+      if (menuValue === 'INGRESSO') {
+        input.placeholder = 'Codice Ingresso';
+        input.style.backgroundColor = '#ccffcc';
+        nome.style.backgroundColor = '#ccffcc';
+        cognome.style.backgroundColor = '#ccffcc';
+        menu.style.backgroundColor = '#ccffcc';
+        menu.style.color = '#006600';
+        extraFields.style.display = 'none';
+        bottoneInserisci.textContent = 'Inserisci Codice';
+        bottoneConferma.style.display = 'none';
+        btnTabella.textContent = '📋 Visualizza ingressi';
+      } else {
+        input.placeholder = 'PIN';
+        input.style.backgroundColor = 'yellow';
+        nome.style.backgroundColor = 'yellow';
+        cognome.style.backgroundColor = 'yellow';
+        menu.style.backgroundColor = 'yellow';
+        menu.style.color = 'black';
+        extraFields.style.display = 'flex';
+        bottoneInserisci.textContent = 'Inserisci PIN';
+        bottoneConferma.style.display = 'inline-block';
+        btnTabella.textContent = '📋 Visualizza prenotazioni';
+
+        const today = new Date().toISOString().split('T')[0];
+        dataField.min = today;
+        dataField.value = today;
+
+        if (orarioField.children.length === 0) {
+          for (let i = 0; i < 24; i++) {
+            const option = document.createElement('option');
+            option.value = i.toString().padStart(2, '0') + ":00";
+            option.textContent = option.value;
+            orarioField.appendChild(option);
+          }
+        }
+      }
+
+      fetch(API_URL, {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/x-www-form-urlencoded',
+          'x-api-token': API_TOKEN
+        },
+        body: new URLSearchParams({ menu: menuValue })
+      });
+    }
+
+    function sendToSheet() {
+      const menu = document.getElementById('menu').value;
+      const codice = document.getElementById('codice').value;
+      const errorBox = document.getElementById('error-box');
+      const messageBox = document.getElementById('message-box');
+      const esitoBox = document.getElementById('esito-box');
+      const nome = document.getElementById('nome');
+      const cognome = document.getElementById('cognome');
+
+      if (!codice.trim()) {
+        errorBox.textContent = 'Inserisci un codice.';
+        errorBox.style.display = 'block';
+        messageBox.style.display = 'none';
+        esitoBox.style.display = 'none';
+        setTimeout(() => errorBox.style.display = 'none', 5000);
+        return;
+      }
+
+      fetch(API_URL, {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/x-www-form-urlencoded',
+          'x-api-token': API_TOKEN
+        },
+        body: new URLSearchParams({ menu, codice })
+      })
+      .then(response => response.json())
+      .then(data => {
+        errorBox.style.display = 'none';
+        messageBox.style.display = 'none';
+
+        if (data.verifica === 'Codice Inesistente') {
+          document.getElementById('codice').value = '';
+          nome.value = '';
+          cognome.value = '';
+          nome.classList.remove('readonly-active');
+          cognome.classList.remove('readonly-active');
+          nome.classList.add('readonly-field');
+          cognome.classList.add('readonly-field');
+          errorBox.textContent = 'Codice non trovato.';
+          errorBox.style.display = 'block';
+          setTimeout(() => errorBox.style.display = 'none', 5000);
+        } else {
+          nome.value = data.nome || '';
+          cognome.value = data.cognome || '';
+          nome.classList.remove('readonly-field');
+          cognome.classList.remove('readonly-field');
+          nome.classList.add('readonly-active');
+          cognome.classList.add('readonly-active');
+          document.getElementById('codice').value = '';
+        }
+
+        if (data.messaggio) {
+          esitoBox.textContent = data.messaggio;
+          esitoBox.style.display = 'block';
+          esitoBox.style.fontSize = '22px';
+          esitoBox.style.fontWeight = 'bold';
+          setTimeout(() => esitoBox.style.display = 'none', 5000);
+        }
+      })
+      .catch(error => {
+        errorBox.textContent = 'Errore durante l’invio.';
+        errorBox.style.display = 'block';
+        esitoBox.style.display = 'none';
+        setTimeout(() => errorBox.style.display = 'none', 5000);
+        console.error(error);
+      });
+    }
+
+    function confermaDataOra() {
+      const data = document.getElementById('data').value;
+      const orario = document.getElementById('orario').value;
+      const errorBox = document.getElementById('error-box');
+      const messageBox = document.getElementById('message-box');
+
+      if (!data || !orario) {
+        errorBox.textContent = 'Seleziona data e orario.';
+        errorBox.style.display = 'block';
+        setTimeout(() => errorBox.style.display = 'none', 5000);
+        return;
+      }
+
+      fetch(API_URL, {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/x-www-form-urlencoded',
+          'x-api-token': API_TOKEN
+        },
+        body: new URLSearchParams({ data, orario })
+      })
+      .then(() => {
+        messageBox.textContent = 'Data e orario aggiornati con successo.';
+        messageBox.style.display = 'block';
+        setTimeout(() => messageBox.style.display = 'none', 5000);
+      })
+      .catch(error => {
+        errorBox.textContent = 'Errore durante la conferma.';
+        errorBox.style.display = 'block';
+        setTimeout(() => errorBox.style.display = 'none', 5000);
+        console.error(error);
+      });
     }
 
     function registrazioneFinale() {
@@ -170,11 +501,11 @@
       btn.textContent = '⏳ Attendere...';
       esitoBox.style.display = 'none';
 
-      fetch("https://pwa-proxy-backend.onrender.com/api/proxy", {
+      fetch(API_URL, {
         method: 'POST',
         headers: {
           'Content-Type': 'application/x-www-form-urlencoded',
-          'x-api-token': 'supersegreto123'
+          'x-api-token': API_TOKEN
         },
         body: new URLSearchParams({ azione: 'eseguiMacro' })
       })
@@ -191,7 +522,6 @@
           esitoBox.style.display = 'none';
           document.getElementById('nome').value = '';
           document.getElementById('cognome').value = '';
-          tornaAllaScelta();
         }, 5000);
       })
       .catch(error => {
@@ -206,8 +536,15 @@
       });
     }
 
-    document.addEventListener("click", resetInactivityTimer);
-    document.addEventListener("keydown", resetInactivityTimer);
+    function iniziaProcedura(tipo) {
+      document.getElementById('selezione-iniziale').style.display = 'none';
+      document.getElementById('wrapper').style.display = 'flex';
+      document.getElementById('menu').value = tipo;
+      updateInputColor();
+    }
+
+    window.onload = updateInputColor;
   </script>
+
 </body>
 </html>
