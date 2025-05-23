@@ -164,12 +164,8 @@
       })
       .then(res => res.json())
       .then(() => {
-        const notifica = document.getElementById("notifica");
-notifica.textContent = "✅ Modifica effettuata";
-notifica.style.display = "block";
-setTimeout(() => {
-  window.location.reload();
-}, 2000);
+        alert("✅ Modifica effettuata");
+        window.location.reload();
 
       })
       .catch(() => alert("❌ Errore durante la modifica"));
