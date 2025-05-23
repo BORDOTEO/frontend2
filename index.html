@@ -303,10 +303,11 @@
 
 
     function chiudiTabella() {
-      document.getElementById('iframe-wrapper').style.display = 'none';
-      document.getElementById('iframe-tabella').src = '';
-      document.getElementById('wrapper').style.display = 'flex';
-    }
+  document.getElementById('iframe-wrapper').style.display = 'none';
+  document.getElementById('iframe-tabella').src = '';
+  tornaAllaSchermataIniziale();  // Torna alla home invece che al wrapper
+}
+
 
     function updateInputColor() {
       const menu = document.getElementById('menu');
