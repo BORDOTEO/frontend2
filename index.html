@@ -289,11 +289,10 @@
     const API_URL = "https://pwa-proxy-backend.onrender.com/api/proxy";
     const API_TOKEN = "supersegreto123";
 
-   function apriTabella() {
+    function apriTabella() {
   const menuValue = document.getElementById('menu').value;
   document.getElementById('wrapper').style.display = 'none';
   document.getElementById('iframe-wrapper').style.display = 'flex';
-  clearTimeout(inattivitaTimer); // <-- AGGIUNGI QUESTO
 
   if (menuValue === 'INGRESSO') {
     document.getElementById('iframe-tabella').src = 'tabella_ingressi.html';
@@ -301,7 +300,6 @@
     document.getElementById('iframe-tabella').src = 'tabella_prenotazioni.html';
   }
 }
-
 
 
     function chiudiTabella() {
@@ -535,23 +533,11 @@
     let inattivitaTimer;
 
 function resetInattivita() {
-  const iframeVisible = document.getElementById('iframe-wrapper').style.display === 'flex';
-
-  // Se siamo nella schermata delle tabelle, NON attivare il timer
-  if (iframeVisible) {
-    clearTimeout(inattivitaTimer);
-    return;
-  }
-
-  // Altrimenti, resetta il timer normalmente
   clearTimeout(inattivitaTimer);
   inattivitaTimer = setTimeout(() => {
     tornaAllaSchermataIniziale();
-  }, 5000);
+  }, 90000); // 30 secondi
 }
-
-}
-
 
 function tornaAllaSchermataIniziale() {
   document.getElementById('wrapper').style.display = 'none';
