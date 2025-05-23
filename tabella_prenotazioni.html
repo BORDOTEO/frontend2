@@ -6,104 +6,77 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <style>
     body {
-      font-family: Arial, sans-serif;
-      background: url('https://i.imgur.com/Fg2KbHy.jpeg') no-repeat center center fixed;
-      background-size: cover;
+      font-family: 'Segoe UI', sans-serif;
+      background: linear-gradient(#007BFF, #00c6ff);
       margin: 0;
       padding: 20px;
     }
 
     h1 {
-      position: sticky;
-      top: 0;
-      z-index: 10;
-      margin: 0;
-      padding: 8px 0;
-      font-size: 20px;
-      background-color: rgba(0, 0, 0, 0.6);
       text-align: center;
-      color: white;
-      text-shadow: 1px 1px 2px black;
-      backdrop-filter: blur(4px);
+      color: #fff;
+      margin-bottom: 20px;
     }
 
-    @media (max-width: 600px) {
-      h1 {
-        font-size: 16px;
-        padding: 6px 0;
-      }
-    }
-
-    #caricamento {
+    #caricamento, #nessun-dato {
       text-align: center;
       font-style: italic;
       color: white;
       margin-top: 20px;
-      font-size: 18px;
-      text-shadow: 1px 1px 2px black;
     }
 
     table {
       width: 100%;
       border-collapse: collapse;
-      margin-top: 20px;
-      background-color: rgba(255, 255, 255, 0.9);
-      box-shadow: 0 0 10px rgba(0,0,0,0.3);
+      background: #fff;
+      border-radius: 10px;
+      overflow: hidden;
+      box-shadow: 0 4px 8px rgba(0,0,0,0.1);
     }
 
     th, td {
-      padding: 10px;
+      padding: 12px;
       text-align: center;
-      border-bottom: 1px solid #ddd;
     }
 
     th {
-      background-color: #009879;
+      background-color: #28a745;
       color: white;
       text-transform: uppercase;
-      font-size: 14px;
     }
 
-    tbody tr {
-      background-color: #fff9e6;
+    tr:nth-child(even) {
+      background-color: #f2f2f2;
     }
 
-    tr:hover {
-      background-color: rgba(0, 0, 0, 0.05);
+    button {
+      background: #ffc107;
+      border: none;
+      padding: 5px 10px;
+      border-radius: 4px;
+      cursor: pointer;
     }
 
-    #nessun-dato {
-      text-align: center;
-      color: #fff;
-      font-style: italic;
-      margin-top: 30px;
-      text-shadow: 1px 1px 2px black;
+    .modifica-form {
       display: none;
-    }
-
-    #modifica-form {
-      display: none;
-      margin-top: 20px;
       background: #fff3cd;
+      border: 1px solid #ffeeba;
       padding: 15px;
-      border-radius: 8px;
-      max-width: 400px;
-      margin-left: auto;
-      margin-right: auto;
+      margin: 20px 0;
+      border-radius: 10px;
     }
 
-    #modifica-form input, #modifica-form button {
-      margin: 5px 0;
+    .modifica-form input, .modifica-form select {
       width: 100%;
+      margin: 8px 0;
       padding: 8px;
-      font-size: 16px;
     }
   </style>
 </head>
 <body>
-
   <h1>Prenotazioni Inserite</h1>
   <p id="caricamento">⏳ Caricamento dati in corso...</p>
+  <p id="nessun-dato" style="display: none;">Nessun dato da visualizzare.</p>
 
   <table id="tabella-prenotazioni">
     <thead>
@@ -120,21 +93,10 @@
     <tbody></tbody>
   </table>
 
-  <p id="nessun-dato">Nessun dato da visualizzare.</p>
-
-  <div id="modifica-form">
-    <h3>Modifica Prenotazione</h3>
-    <input type="date" id="nuova-data">
-    <input type="time" id="nuovo-orario">
-    <button onclick="salvaModifica()">💾 Salva</button>
-    <button onclick="annullaModifica()">❌ Annulla</button>
-  </div>
-
   <script>
     const API_URL = "https://pwa-proxy-backend.onrender.com/api/proxy";
     const API_TOKEN = "supersegreto123";
     const tbody = document.querySelector("#tabella-prenotazioni tbody");
-
     let idDaModificare = "";
 
     fetch(API_URL, {
@@ -156,9 +118,7 @@
         return;
       }
 
-      dati.slice(1).forEach(riga => {
-        if (!riga || riga.length < 6) return;
-
+      dati.slice(1).forEach((riga, index) => {
         const id = `${riga[1]}|${riga[2]}|${riga[3]}|${riga[4]}|${riga[5]}`;
         const tr = document.createElement("tr");
         tr.innerHTML = `
@@ -168,32 +128,49 @@
           <td>${riga[3]}</td>
           <td>${riga[4]}</td>
           <td>${riga[5]}</td>
-          <td><button onclick="apriModifica('${id}', '${riga[1]}', '${riga[2]}')">✏️</button></td>
+          <td><button onclick="apriModifica(this, '${id}', '${riga[1]}', '${riga[2]}')">✏️</button></td>
         `;
         tbody.appendChild(tr);
       });
 
-      if (!tbody.hasChildNodes()) {
-        nessunDato.style.display = "block";
-      }
-
       caricamento.style.display = "none";
-    })
-    .catch(err => {
-      console.error("Errore nel caricamento dati:", err);
-      document.getElementById("caricamento").textContent = "❌ Errore nel caricamento dati.";
     });
 
-    function apriModifica(id, data, orario) {
+    function apriModifica(btn, id, data, orario) {
       idDaModificare = id;
-      document.getElementById("nuova-data").value = data;
-      document.getElementById("nuovo-orario").value = orario;
-      document.getElementById("modifica-form").style.display = "block";
+
+      const tr = btn.closest("tr");
+      chiudiTuttiIForm();
+
+      const form = document.createElement("tr");
+      form.classList.add("modifica-form");
+      form.innerHTML = `
+        <td colspan="7">
+          <div>
+            <label>Nuova data:</label>
+            <input type="date" id="nuova-data" value="${data}">
+            <label>Nuovo orario:</label>
+            <select id="nuovo-orario">
+              ${[...Array(15)].map((_, i) => {
+                const h = String(i + 8).padStart(2, '0') + ":00";
+                return `<option value="${h}" ${h === orario ? 'selected' : ''}>${h}</option>`;
+              }).join('')}
+            </select>
+            <button onclick="salvaModifica()">💾 Salva</button>
+            <button onclick="annullaModifica()">❌ Annulla</button>
+          </div>
+        </td>
+      `;
+
+      tr.insertAdjacentElement("afterend", form);
+    }
+
+    function chiudiTuttiIForm() {
+      document.querySelectorAll(".modifica-form").forEach(el => el.remove());
     }
 
     function annullaModifica() {
-      idDaModificare = "";
-      document.getElementById("modifica-form").style.display = "none";
+      chiudiTuttiIForm();
     }
 
     function salvaModifica() {
@@ -214,13 +191,12 @@
         })
       })
       .then(res => res.json())
-      .then(res => {
+      .then(() => {
         alert("✅ Modifica effettuata");
         window.location.reload();
       })
       .catch(() => alert("❌ Errore durante la modifica"));
     }
   </script>
-
 </body>
 </html>
