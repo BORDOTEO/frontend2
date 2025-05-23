@@ -65,7 +65,7 @@
     }
 
     tbody tr {
-      background-color: #fff9e6; /* verde chiaro */
+      background-color: #fff9e6;
     }
 
     tr:hover {
@@ -79,6 +79,24 @@
       margin-top: 30px;
       text-shadow: 1px 1px 2px black;
       display: none;
+    }
+
+    #modifica-form {
+      display: none;
+      margin-top: 20px;
+      background: #fff3cd;
+      padding: 15px;
+      border-radius: 8px;
+      max-width: 400px;
+      margin-left: auto;
+      margin-right: auto;
+    }
+
+    #modifica-form input, #modifica-form button {
+      margin: 5px 0;
+      width: 100%;
+      padding: 8px;
+      font-size: 16px;
     }
   </style>
 </head>
@@ -96,6 +114,7 @@
         <th>Nome</th>
         <th>Cognome</th>
         <th>Struttura</th>
+        <th>Modifica</th>
       </tr>
     </thead>
     <tbody></tbody>
@@ -103,9 +122,20 @@
 
   <p id="nessun-dato">Nessun dato da visualizzare.</p>
 
+  <div id="modifica-form">
+    <h3>Modifica Prenotazione</h3>
+    <input type="date" id="nuova-data">
+    <input type="time" id="nuovo-orario">
+    <button onclick="salvaModifica()">💾 Salva</button>
+    <button onclick="annullaModifica()">❌ Annulla</button>
+  </div>
+
   <script>
     const API_URL = "https://pwa-proxy-backend.onrender.com/api/proxy";
     const API_TOKEN = "supersegreto123";
+    const tbody = document.querySelector("#tabella-prenotazioni tbody");
+
+    let idDaModificare = "";
 
     fetch(API_URL, {
       method: "POST",
@@ -117,7 +147,6 @@
     })
     .then(res => res.json())
     .then(dati => {
-      const tbody = document.querySelector("#tabella-prenotazioni tbody");
       const nessunDato = document.getElementById("nessun-dato");
       const caricamento = document.getElementById("caricamento");
 
@@ -130,6 +159,7 @@
       dati.slice(1).forEach(riga => {
         if (!riga || riga.length < 6) return;
 
+        const id = `${riga[0].replace(/[^0-9]/g, '')}_${riga[3]}_${riga[5]}`;
         const tr = document.createElement("tr");
         tr.innerHTML = `
           <td>${riga[0]}</td>
@@ -138,6 +168,7 @@
           <td>${riga[3]}</td>
           <td>${riga[4]}</td>
           <td>${riga[5]}</td>
+          <td><button onclick="apriModifica('${id}', '${riga[1]}', '${riga[2]}')">✏️</button></td>
         `;
         tbody.appendChild(tr);
       });
@@ -152,6 +183,43 @@
       console.error("Errore nel caricamento dati:", err);
       document.getElementById("caricamento").textContent = "❌ Errore nel caricamento dati.";
     });
+
+    function apriModifica(id, data, orario) {
+      idDaModificare = id;
+      document.getElementById("nuova-data").value = data;
+      document.getElementById("nuovo-orario").value = orario;
+      document.getElementById("modifica-form").style.display = "block";
+    }
+
+    function annullaModifica() {
+      idDaModificare = "";
+      document.getElementById("modifica-form").style.display = "none";
+    }
+
+    function salvaModifica() {
+      const nuovaData = document.getElementById("nuova-data").value;
+      const nuovoOrario = document.getElementById("nuovo-orario").value;
+
+      fetch(API_URL, {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/x-www-form-urlencoded",
+          "x-api-token": API_TOKEN
+        },
+        body: new URLSearchParams({
+          azione: "modificaPrenotazione",
+          id: idDaModificare,
+          nuovaData,
+          nuovoOrario
+        })
+      })
+      .then(res => res.json())
+      .then(res => {
+        alert("✅ Modifica effettuata");
+        window.location.reload();
+      })
+      .catch(() => alert("❌ Errore durante la modifica"));
+    }
   </script>
 
 </body>
