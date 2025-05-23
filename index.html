@@ -533,15 +533,18 @@
     let inattivitaTimer;
 
 function resetInattivita() {
-  // Solo se siamo nella schermata "wrapper" (inserimento)
   const isWrapperVisible = document.getElementById('wrapper').style.display === 'flex';
-  if (!isWrapperVisible) return;
+  const isIframeWrapperVisible = document.getElementById('iframe-wrapper').style.display === 'flex';
 
-  clearTimeout(inattivitaTimer);
-  inattivitaTimer = setTimeout(() => {
-    tornaAllaSchermataIniziale();
-  }, 30000); // 30 secondi
+  // Attiva il timer solo se siamo nella schermata di inserimento (e NON nella tabella)
+  if (isWrapperVisible && !isIframeWrapperVisible) {
+    clearTimeout(inattivitaTimer);
+    inattivitaTimer = setTimeout(() => {
+      tornaAllaSchermataIniziale();
+    }, 5000); // 30 secondi
+  }
 }
+
 
 function tornaAllaSchermataIniziale() {
   document.getElementById('wrapper').style.display = 'none';
