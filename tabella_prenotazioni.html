@@ -34,18 +34,6 @@
       }
     }
 
-    #notifica {
-      display: none;
-      background: #28a745;
-      color: white;
-      padding: 10px;
-      margin: 15px auto;
-      border-radius: 6px;
-      text-align: center;
-      font-weight: bold;
-      max-width: 400px;
-    }
-
     #caricamento, #nessun-dato {
       text-align: center;
       font-style: italic;
@@ -98,12 +86,23 @@
       margin: 4px;
       font-size: 14px;
     }
+
+    .notifica-locale {
+      display: block;
+      margin-top: 10px;
+      background: #28a745;
+      color: white;
+      padding: 6px 10px;
+      border-radius: 6px;
+      font-size: 14px;
+      font-weight: bold;
+      text-align: center;
+    }
   </style>
 </head>
 <body>
 
   <h1>Prenotazioni Inserite</h1>
-  <div id="notifica"></div>
   <p id="caricamento">⏳ Caricamento dati in corso...</p>
 
   <table id="tabella-prenotazioni">
@@ -151,14 +150,15 @@
               }).join('')}
             </select>
           </label>
-          <button onclick="salvaModifica()">💾 Salva</button>
+          <button onclick="salvaModifica(this)">💾 Salva</button>
           <button onclick="chiudiFormModifica()">❌ Annulla</button>
+          <div id="notifica-locale" class="notifica-locale" style="display:none;"></div>
         </td>
       `;
       tr.insertAdjacentElement("afterend", formRow);
     }
 
-    function salvaModifica() {
+    function salvaModifica(btn) {
       const nuovaData = document.getElementById("nuova-data").value;
       const nuovoOrario = document.getElementById("nuovo-orario").value;
 
@@ -177,12 +177,12 @@
       })
       .then(res => res.json())
       .then(() => {
-        const notifica = document.getElementById("notifica");
+        const notifica = document.getElementById("notifica-locale");
         notifica.textContent = "✅ Modifica effettuata";
         notifica.style.display = "block";
         setTimeout(() => {
           window.location.reload();
-        }, 2000);
+        }, 1500);
       })
       .catch(() => alert("❌ Errore durante la modifica"));
     }
