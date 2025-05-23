@@ -484,49 +484,63 @@
     }
 
     function registrazioneFinale() {
-      const btn = document.getElementById('btn-registrazione');
-      const esitoBox = document.getElementById('esito-box');
+  const btn = document.getElementById('btn-registrazione');
+  const esitoBox = document.getElementById('esito-box');
 
-      btn.disabled = true;
-      btn.textContent = '⏳ Attendere...';
-      esitoBox.style.display = 'none';
+  btn.disabled = true;
+  btn.textContent = '⏳ Attendere...';
+  esitoBox.style.display = 'none';
 
-      fetch(API_URL, {
-        method: 'POST',
-        headers: {
-          'Content-Type': 'application/x-www-form-urlencoded',
-          'x-api-token': API_TOKEN
-        },
-        body: new URLSearchParams({ azione: 'eseguiMacro' })
-      })
-      .then(response => response.json())
-      .then(data => {
-        esitoBox.textContent = data.esito || 'Registrazione completata.';
+  // 1️⃣ Inizia SUBITO a controllare ogni secondo
+  const intervalId = setInterval(() => {
+    fetch(API_URL, {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/x-www-form-urlencoded',
+        'x-api-token': API_TOKEN
+      },
+      body: new URLSearchParams({ azione: 'verificaEsito' })
+    })
+    .then(res => res.json())
+    .then(data => {
+      if (data.esito) {
+        clearInterval(intervalId); // 🛑 Ferma il controllo
+
+        // ✅ Mostra il risultato all’utente
+        esitoBox.textContent = data.esito;
         esitoBox.style.backgroundColor = data.colore || '#d4edda';
-        esitoBox.style.color = '#155724';
-        esitoBox.style.fontSize = '22px';
-        esitoBox.style.fontWeight = 'bold';
         esitoBox.style.display = 'block';
 
         setTimeout(() => {
-        esitoBox.style.display = 'none';
-        document.getElementById('nome').value = '';
-        document.getElementById('cognome').value = '';
-        tornaAllaSchermataIniziale();
-      }, 5000);
+          esitoBox.style.display = 'none';
+          document.getElementById('nome').value = '';
+          document.getElementById('cognome').value = '';
+          tornaAllaSchermataIniziale();
+        }, 5000);
+      }
+    });
+  }, 1000);
 
-      })
-      .catch(error => {
-        esitoBox.textContent = 'Errore nell’avvio della macro.';
-        esitoBox.style.backgroundColor = '#ffcccc';
-        esitoBox.style.display = 'block';
-        console.error(error);
-      })
-      .finally(() => {
-        btn.disabled = false;
-        btn.textContent = '✅ REGISTRA';
-      });
-    }
+  // 2️⃣ Lancia la macro ma NON aspettarla!
+  fetch(API_URL, {
+    method: 'POST',
+    headers: {
+      'Content-Type': 'application/x-www-form-urlencoded',
+      'x-api-token': API_TOKEN
+    },
+    body: new URLSearchParams({ azione: 'eseguiMacro' })
+  }).catch(err => {
+    clearInterval(intervalId);
+    esitoBox.textContent = 'Errore nell’avvio della macro.';
+    esitoBox.style.backgroundColor = '#ffcccc';
+    esitoBox.style.display = 'block';
+    console.error(err);
+  }).finally(() => {
+    btn.disabled = false;
+    btn.textContent = '✅ REGISTRA';
+  });
+}
+
 
 
 
