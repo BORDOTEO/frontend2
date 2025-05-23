@@ -27,6 +27,39 @@
       backdrop-filter: blur(4px);
     }
 
+    #filtro-mese-container {
+      margin-top: 15px;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      gap: 12px;
+      flex-wrap: wrap;
+    }
+
+    #filtro-mese {
+      padding: 6px 12px;
+      font-size: 15px;
+      border-radius: 6px;
+      background-color: #fff59d;
+      border: 1px solid #e6d800;
+      box-shadow: inset 0 1px 2px rgba(0, 0, 0, 0.1);
+      transition: box-shadow 0.2s;
+    }
+
+    #filtro-mese:focus {
+      box-shadow: 0 0 0 3px rgba(255, 245, 157, 0.5);
+      outline: none;
+    }
+
+    #totali {
+      display: flex;
+      flex-direction: row;
+      gap: 20px;
+      font-weight: bold;
+      color: white;
+      text-shadow: 1px 1px 2px black;
+    }
+
     #caricamento {
       text-align: center;
       font-style: italic;
@@ -73,16 +106,6 @@
       text-shadow: 1px 1px 2px black;
       display: none;
     }
-
-    #filtro-mese-container {
-      margin-top: 10px;
-      text-align: center;
-    }
-
-    #filtro-mese {
-      padding: 5px;
-      font-size: 14px;
-    }
   </style>
 </head>
 <body>
@@ -90,7 +113,7 @@
   <h1>Ingressi Registrati</h1>
 
   <div id="filtro-mese-container">
-    <label for="filtro-mese" style="color: white; text-shadow: 1px 1px 2px black; margin-right: 8px;">Filtra per mese:</label>
+    <label for="filtro-mese">📅 Seleziona mese:</label>
     <select id="filtro-mese">
       <option value="">Tutti</option>
       <option value="01">Gennaio</option>
@@ -106,6 +129,11 @@
       <option value="11">Novembre</option>
       <option value="12">Dicembre</option>
     </select>
+
+    <div id="totali">
+      <span id="totale-ingressi">Ingressi: 0</span>
+      <span id="totale-fatturato">Fatturato: €0.00</span>
+    </div>
   </div>
 
   <p id="caricamento">⏳ Caricamento dati in corso...</p>
@@ -129,11 +157,15 @@
     const API_URL = "https://pwa-proxy-backend.onrender.com/api/proxy";
     const API_TOKEN = "supersegreto123";
 
+    let datiIngressi = [];
+    let gettone = 0;
+
     const tbody = document.querySelector("#tabella-ingressi tbody");
     const caricamento = document.getElementById("caricamento");
     const nessunDato = document.getElementById("nessun-dato");
     const filtroMese = document.getElementById("filtro-mese");
-    let datiIngressi = [];
+    const totaleIngressi = document.getElementById("totale-ingressi");
+    const totaleFatturato = document.getElementById("totale-fatturato");
 
     function formatDateTime(isoString) {
       const date = new Date(isoString);
@@ -150,36 +182,43 @@
       };
     }
 
-    fetch(API_URL, {
-      method: "POST",
-      headers: {
-        "Content-Type": "application/x-www-form-urlencoded",
-        "x-api-token": API_TOKEN
-      },
-      body: new URLSearchParams({ azione: "mostraTabella" })
-    })
-    .then(res => res.json())
-    .then(dati => {
-      if (!Array.isArray(dati) || dati.length <= 1) {
+    async function caricaDati() {
+      try {
+        const [ingressiRes, gettoneRes] = await Promise.all([
+          fetch(API_URL, {
+            method: "POST",
+            headers: {
+              "Content-Type": "application/x-www-form-urlencoded",
+              "x-api-token": API_TOKEN
+            },
+            body: new URLSearchParams({ azione: "mostraTabella" })
+          }),
+          fetch(API_URL, {
+            method: "POST",
+            headers: {
+              "Content-Type": "application/x-www-form-urlencoded",
+              "x-api-token": API_TOKEN
+            },
+            body: new URLSearchParams({ azione: "getGettone" })
+          })
+        ]);
+
+        const dati = await ingressiRes.json();
+        const valoreGettone = await gettoneRes.json();
+        gettone = parseFloat(valoreGettone.gettone || 0);
+
+        datiIngressi = dati.slice(1).map(riga => {
+          const { data, ora, mese } = formatDateTime(riga[0]);
+          return [data, ora, riga[1] || "", riga[2] || "", riga[3] || "", mese];
+        });
+
+        aggiornaTabella();
         caricamento.style.display = "none";
-        nessunDato.style.display = "block";
-        return;
+      } catch (error) {
+        console.error("Errore nel caricamento:", error);
+        caricamento.textContent = "❌ Errore nel caricamento dati.";
       }
-
-      datiIngressi = dati.slice(1).map(riga => {
-        const { data, ora, mese } = formatDateTime(riga[0]);
-        return [data, ora, riga[1] || "", riga[2] || "", riga[3] || "", mese];
-      });
-
-      aggiornaTabella();
-      caricamento.style.display = "none";
-    })
-    .catch(error => {
-      console.error("Errore nel caricamento dati:", error);
-      caricamento.textContent = "❌ Errore nel caricamento dati.";
-    });
-
-    filtroMese.addEventListener("change", aggiornaTabella);
+    }
 
     function aggiornaTabella() {
       tbody.innerHTML = "";
@@ -189,12 +228,16 @@
         ? datiIngressi.filter(r => r[5] === meseSelezionato)
         : datiIngressi;
 
+      totaleIngressi.textContent = `Ingressi: ${filtrati.length}`;
+      totaleFatturato.textContent = `Fatturato: €${(filtrati.length * gettone).toFixed(2)}`;
+
       if (filtrati.length === 0) {
         nessunDato.style.display = "block";
         return;
       }
 
       nessunDato.style.display = "none";
+
       filtrati.forEach(r => {
         const tr = document.createElement("tr");
         tr.innerHTML = `
@@ -207,6 +250,9 @@
         tbody.appendChild(tr);
       });
     }
+
+    filtroMese.addEventListener("change", aggiornaTabella);
+    caricaDati();
   </script>
 
 </body>
