@@ -6,16 +6,32 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <style>
     body {
-      font-family: 'Segoe UI', sans-serif;
-      background: linear-gradient(#007BFF, #00c6ff);
+      font-family: Arial, sans-serif;
+      background: url('https://i.imgur.com/Fg2KbHy.jpeg') no-repeat center center fixed;
+      background-size: cover;
       margin: 0;
       padding: 20px;
     }
 
     h1 {
+      position: sticky;
+      top: 0;
+      z-index: 10;
+      margin: 0;
+      padding: 8px 0;
+      font-size: 20px;
+      background-color: rgba(0, 0, 0, 0.6);
       text-align: center;
-      color: #fff;
-      margin-bottom: 20px;
+      color: white;
+      text-shadow: 1px 1px 2px black;
+      backdrop-filter: blur(4px);
+    }
+
+    @media (max-width: 600px) {
+      h1 {
+        font-size: 16px;
+        padding: 6px 0;
+      }
     }
 
     #caricamento, #nessun-dato {
@@ -23,60 +39,59 @@
       font-style: italic;
       color: white;
       margin-top: 20px;
+      font-size: 18px;
+      text-shadow: 1px 1px 2px black;
     }
 
     table {
       width: 100%;
       border-collapse: collapse;
-      background: #fff;
-      border-radius: 10px;
-      overflow: hidden;
-      box-shadow: 0 4px 8px rgba(0,0,0,0.1);
+      margin-top: 20px;
+      background-color: rgba(255, 255, 255, 0.9);
+      box-shadow: 0 0 10px rgba(0,0,0,0.3);
     }
 
     th, td {
-      padding: 12px;
+      padding: 10px;
       text-align: center;
+      border-bottom: 1px solid #ddd;
     }
 
     th {
-      background-color: #28a745;
+      background-color: #009879;
       color: white;
       text-transform: uppercase;
+      font-size: 14px;
     }
 
-    tr:nth-child(even) {
-      background-color: #f2f2f2;
+    tbody tr {
+      background-color: #fff9e6;
     }
 
-    button {
-      background: #ffc107;
-      border: none;
-      padding: 5px 10px;
-      border-radius: 4px;
-      cursor: pointer;
+    tr:hover {
+      background-color: rgba(0, 0, 0, 0.05);
     }
 
-    .modifica-form {
-      display: none;
+    .modifica-riga {
       background: #fff3cd;
-      border: 1px solid #ffeeba;
-      padding: 15px;
-      margin: 20px 0;
-      border-radius: 10px;
+      border-top: 2px solid #ffc107;
     }
 
-    .modifica-form input, .modifica-form select {
-      width: 100%;
-      margin: 8px 0;
-      padding: 8px;
+    .modifica-riga td {
+      padding: 15px;
+    }
+
+    .modifica-riga input, .modifica-riga select, .modifica-riga button {
+      padding: 6px;
+      margin: 4px;
+      font-size: 14px;
     }
   </style>
 </head>
 <body>
+
   <h1>Prenotazioni Inserite</h1>
   <p id="caricamento">⏳ Caricamento dati in corso...</p>
-  <p id="nessun-dato" style="display: none;">Nessun dato da visualizzare.</p>
 
   <table id="tabella-prenotazioni">
     <thead>
@@ -93,84 +108,41 @@
     <tbody></tbody>
   </table>
 
+  <p id="nessun-dato">Nessun dato da visualizzare.</p>
+
   <script>
     const API_URL = "https://pwa-proxy-backend.onrender.com/api/proxy";
     const API_TOKEN = "supersegreto123";
     const tbody = document.querySelector("#tabella-prenotazioni tbody");
     let idDaModificare = "";
 
-    fetch(API_URL, {
-      method: "POST",
-      headers: {
-        "Content-Type": "application/x-www-form-urlencoded",
-        "x-api-token": API_TOKEN
-      },
-      body: new URLSearchParams({ azione: "mostraPrenotazioni" })
-    })
-    .then(res => res.json())
-    .then(dati => {
-      const nessunDato = document.getElementById("nessun-dato");
-      const caricamento = document.getElementById("caricamento");
+    function chiudiFormModifica() {
+      document.querySelectorAll(".modifica-riga").forEach(el => el.remove());
+    }
 
-      if (!Array.isArray(dati) || dati.length <= 1) {
-        nessunDato.style.display = "block";
-        caricamento.style.display = "none";
-        return;
-      }
-
-      dati.slice(1).forEach((riga, index) => {
-        const id = `${riga[1]}|${riga[2]}|${riga[3]}|${riga[4]}|${riga[5]}`;
-        const tr = document.createElement("tr");
-        tr.innerHTML = `
-          <td>${riga[0]}</td>
-          <td>${riga[1]}</td>
-          <td>${riga[2]}</td>
-          <td>${riga[3]}</td>
-          <td>${riga[4]}</td>
-          <td>${riga[5]}</td>
-          <td><button onclick="apriModifica(this, '${id}', '${riga[1]}', '${riga[2]}')">✏️</button></td>
-        `;
-        tbody.appendChild(tr);
-      });
-
-      caricamento.style.display = "none";
-    });
-
-    function apriModifica(btn, id, data, orario) {
+    function apriModifica(button, id, data, orario) {
+      chiudiFormModifica();
       idDaModificare = id;
 
-      const tr = btn.closest("tr");
-      chiudiTuttiIForm();
-
-      const form = document.createElement("tr");
-      form.classList.add("modifica-form");
-      form.innerHTML = `
+      const tr = button.closest("tr");
+      const formRow = document.createElement("tr");
+      formRow.className = "modifica-riga";
+      formRow.innerHTML = `
         <td colspan="7">
-          <div>
-            <label>Nuova data:</label>
-            <input type="date" id="nuova-data" value="${data}">
-            <label>Nuovo orario:</label>
+          <label>Data: <input type="date" id="nuova-data" value="${data}"></label>
+          <label>Orario: 
             <select id="nuovo-orario">
-              ${[...Array(15)].map((_, i) => {
-                const h = String(i + 8).padStart(2, '0') + ":00";
+              ${Array.from({length: 15}, (_, i) => {
+                const h = (8 + i).toString().padStart(2, '0') + ':00';
                 return `<option value="${h}" ${h === orario ? 'selected' : ''}>${h}</option>`;
               }).join('')}
             </select>
-            <button onclick="salvaModifica()">💾 Salva</button>
-            <button onclick="annullaModifica()">❌ Annulla</button>
-          </div>
+          </label>
+          <button onclick="salvaModifica()">💾 Salva</button>
+          <button onclick="chiudiFormModifica()">❌ Annulla</button>
         </td>
       `;
-
-      tr.insertAdjacentElement("afterend", form);
-    }
-
-    function chiudiTuttiIForm() {
-      document.querySelectorAll(".modifica-form").forEach(el => el.remove());
-    }
-
-    function annullaModifica() {
-      chiudiTuttiIForm();
+      tr.insertAdjacentElement("afterend", formRow);
     }
 
     function salvaModifica() {
@@ -197,6 +169,49 @@
       })
       .catch(() => alert("❌ Errore durante la modifica"));
     }
+
+    fetch(API_URL, {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/x-www-form-urlencoded",
+        "x-api-token": API_TOKEN
+      },
+      body: new URLSearchParams({ azione: "mostraPrenotazioni" })
+    })
+    .then(res => res.json())
+    .then(dati => {
+      const nessunDato = document.getElementById("nessun-dato");
+      const caricamento = document.getElementById("caricamento");
+
+      if (!Array.isArray(dati) || dati.length <= 1) {
+        nessunDato.style.display = "block";
+        caricamento.style.display = "none";
+        return;
+      }
+
+      dati.slice(1).forEach(riga => {
+        if (!riga || riga.length < 6) return;
+        const id = `${riga[1]}|${riga[2]}|${riga[3]}|${riga[4]}|${riga[5]}`;
+        const tr = document.createElement("tr");
+        tr.innerHTML = `
+          <td>${riga[0]}</td>
+          <td>${riga[1]}</td>
+          <td>${riga[2]}</td>
+          <td>${riga[3]}</td>
+          <td>${riga[4]}</td>
+          <td>${riga[5]}</td>
+          <td><button onclick="apriModifica(this, '${id}', '${riga[1]}', '${riga[2]}')">✏️</button></td>
+        `;
+        tbody.appendChild(tr);
+      });
+
+      caricamento.style.display = "none";
+    })
+    .catch(err => {
+      console.error("Errore nel caricamento dati:", err);
+      document.getElementById("caricamento").textContent = "❌ Errore nel caricamento dati.";
+    });
   </script>
+
 </body>
 </html>
