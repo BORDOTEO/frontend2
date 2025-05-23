@@ -535,9 +535,16 @@
 
 function resetInattivita() {
   clearTimeout(inattivitaTimer);
-  inattivitaTimer = setTimeout(() => {
-    tornaAllaSchermataIniziale();
-  }, 30000); // 30 secondi
+
+  const wrapperVisible = document.getElementById('wrapper').style.display !== 'none';
+  const iframeWrapperVisible = document.getElementById('iframe-wrapper').style.display !== 'none';
+
+  // Se siamo nella schermata inserimento, attiva il timer di ritorno
+  if (wrapperVisible && !iframeWrapperVisible) {
+    inattivitaTimer = setTimeout(() => {
+      tornaAllaSchermataIniziale();
+    }, 30000); // 30 secondi
+  }
 }
 
 function tornaAllaSchermataIniziale() {
