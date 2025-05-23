@@ -243,33 +243,23 @@
 <body>
 
   <div id="selezione-iniziale" style="display: flex; flex-direction: column; align-items: center; justify-content: center; height: 100vh; gap: 20px; background-image: url('https://i.imgur.com/Fg2KbHy.jpeg'); background-size: cover; background-position: center;">
-  <img id="logo-iniziale" src="https://i.imgur.com/G263KeW.png" style="width: 180px; max-width: 90%;" />
-  <h2 style="color: black;">Seleziona una funzione</h2>
+    <img id="logo-iniziale" src="https://i.imgur.com/G263KeW.png" style="width: 180px; max-width: 90%;" />
+    <h2 style="color: black;">Seleziona una funzione</h2>
+    <button onclick="iniziaProcedura('PRENOTAZIONE')" style="padding: 15px 30px; font-size: 18px; background-color: #ffeb3b; border: none; box-shadow: 0 4px #c8b900; font-weight: bold;">
+      🗓️ Prenotazione
+    </button>
+    <p style="max-width: 300px; text-align: center;">Se il cliente vuole prenotare un futuro accesso, clicca su “Prenotazione”.</p>
 
-  <!-- PRENOTAZIONE -->
-  <button onclick="iniziaProcedura('PRENOTAZIONE')" style="padding: 15px 30px; font-size: 18px; background-color: #ffeb3b; border: none; box-shadow: 0 4px #c8b900; font-weight: bold;">
-    🗓️ Prenotazione
-  </button>
-  <p style="max-width: 300px; text-align: center;">Se il cliente vuole prenotare un futuro accesso, clicca su “Prenotazione”.</p>
-  <button onclick="apriTabellaPrenotazioni()" style="padding: 15px 30px; font-size: 16px; background-color: #42a5f5; border: none; box-shadow: 0 4px #1e88e5; font-weight: bold; color: white;">
-    📋 Visualizza prenotazioni
-  </button>
-
-  <!-- INGRESSO -->
-  <button onclick="iniziaProcedura('INGRESSO')" style="padding: 15px 30px; font-size: 18px; background-color: #66bb6a; border: none; box-shadow: 0 4px #4caf50; font-weight: bold;">
-    🔓 Ingresso
-  </button>
-  <p style="max-width: 300px; text-align: center;">Se il cliente è arrivato alla struttura e vuole registrare il suo ingresso ora, clicca su “Ingresso”.</p>
-  <button onclick="apriTabellaIngressi()" style="padding: 15px 30px; font-size: 16px; background-color: #42a5f5; border: none; box-shadow: 0 4px #1e88e5; font-weight: bold; color: white;">
-    📋 Visualizza ingressi
-  </button>
-</div>
-
-
+    <button onclick="iniziaProcedura('INGRESSO')" style="padding: 15px 30px; font-size: 18px; background-color: #66bb6a; border: none; box-shadow: 0 4px #4caf50; font-weight: bold;">
+      🔓 Ingresso
+    </button>
+    <p style="max-width: 300px; text-align: center;">Se il cliente è arrivato alla struttura e vuole registrare il suo ingresso ora, clicca su “Ingresso”.</p>
+  </div>
 
   <div id="wrapper" style="display: none;">
     <button id="btn-home" onclick="tornaAllaSchermataIniziale()">🏠 Torna alla home</button>
     <img id="logo" src="https://i.imgur.com/G263KeW.png" />
+    <button id="btn-tabella" onclick="apriTabella()">📋 Visualizza ingressi</button>
     <select id="menu" onchange="updateInputColor()">
       <option value="PRENOTAZIONE">PRENOTAZIONE</option>
       <option value="INGRESSO">INGRESSO</option>
@@ -558,42 +548,11 @@ function tornaAllaSchermataIniziale() {
 
 function iniziaProcedura(tipo) {
   localStorage.setItem('tipoAccesso', tipo);
-  document.getElementById('selezione-iniziale').style.display = 'flex';
-  const btnTabella = document.getElementById('btn-tabella');
-  if (tipo === 'INGRESSO') {
-    btnTabella.textContent = '📋 Visualizza ingressi';
-  } else {
-    btnTabella.textContent = '📋 Visualizza prenotazioni';
-  }
-  document.getElementById('wrapper').style.display = 'flex';
   document.getElementById('selezione-iniziale').style.display = 'none';
+  document.getElementById('wrapper').style.display = 'flex';
   document.getElementById('menu').value = tipo;
   updateInputColor();
   resetInattivita();
-}
-
-function apriTabellaDaHome() {
-  const tipo = localStorage.getItem('tipoAccesso') || 'INGRESSO';
-  document.getElementById('selezione-iniziale').style.display = 'none';
-  document.getElementById('iframe-wrapper').style.display = 'flex';
-
-  if (tipo === 'INGRESSO') {
-    document.getElementById('iframe-tabella').src = 'tabella_ingressi.html';
-  } else {
-    document.getElementById('iframe-tabella').src = 'tabella_prenotazioni.html';
-  }
-}
-
-function apriTabellaPrenotazioni() {
-  document.getElementById('selezione-iniziale').style.display = 'none';
-  document.getElementById('iframe-wrapper').style.display = 'flex';
-  document.getElementById('iframe-tabella').src = 'tabella_prenotazioni.html';
-}
-
-function apriTabellaIngressi() {
-  document.getElementById('selezione-iniziale').style.display = 'none';
-  document.getElementById('iframe-wrapper').style.display = 'flex';
-  document.getElementById('iframe-tabella').src = 'tabella_ingressi.html';
 }
 
 window.onload = function () {
