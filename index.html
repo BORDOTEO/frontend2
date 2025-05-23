@@ -533,6 +533,10 @@
     let inattivitaTimer;
 
 function resetInattivita() {
+  // Solo se siamo nella schermata "wrapper" (inserimento)
+  const isWrapperVisible = document.getElementById('wrapper').style.display === 'flex';
+  if (!isWrapperVisible) return;
+
   clearTimeout(inattivitaTimer);
   inattivitaTimer = setTimeout(() => {
     tornaAllaSchermataIniziale();
