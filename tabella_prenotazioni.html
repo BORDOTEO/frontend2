@@ -34,6 +34,18 @@
       }
     }
 
+    #notifica {
+      display: none;
+      background: #28a745;
+      color: white;
+      padding: 10px;
+      margin: 15px auto;
+      border-radius: 6px;
+      text-align: center;
+      font-weight: bold;
+      max-width: 400px;
+    }
+
     #caricamento, #nessun-dato {
       text-align: center;
       font-style: italic;
@@ -91,6 +103,7 @@
 <body>
 
   <h1>Prenotazioni Inserite</h1>
+  <div id="notifica"></div>
   <p id="caricamento">⏳ Caricamento dati in corso...</p>
 
   <table id="tabella-prenotazioni">
@@ -164,9 +177,12 @@
       })
       .then(res => res.json())
       .then(() => {
-        alert("✅ Modifica effettuata");
-        window.location.reload();
-
+        const notifica = document.getElementById("notifica");
+        notifica.textContent = "✅ Modifica effettuata";
+        notifica.style.display = "block";
+        setTimeout(() => {
+          window.location.reload();
+        }, 2000);
       })
       .catch(() => alert("❌ Errore durante la modifica"));
     }
