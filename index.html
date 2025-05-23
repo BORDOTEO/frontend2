@@ -484,73 +484,49 @@
     }
 
     function registrazioneFinale() {
-  const btn = document.getElementById('btn-registrazione');
-  const esitoBox = document.getElementById('esito-box');
+      const btn = document.getElementById('btn-registrazione');
+      const esitoBox = document.getElementById('esito-box');
 
-  btn.disabled = true;
-  btn.textContent = '⏳ Attendere...';
-  esitoBox.style.display = 'none';
+      btn.disabled = true;
+      btn.textContent = '⏳ Attendere...';
+      esitoBox.style.display = 'none';
 
-  fetch(API_URL, {
-    method: 'POST',
-    headers: {
-      'Content-Type': 'application/x-www-form-urlencoded',
-      'x-api-token': API_TOKEN
-    },
-    body: new URLSearchParams({ azione: 'eseguiMacro' })
-  })
-  .then(() => {
-    // Poll ogni 500ms per max 10s (20 tentativi)
-    let tentativi = 0;
-    const maxTentativi = 20;
-
-    const intervallo = setInterval(() => {
-      fetch(API_URL + '?azione=leggiEsito', {
-        method: 'GET',
+      fetch(API_URL, {
+        method: 'POST',
         headers: {
+          'Content-Type': 'application/x-www-form-urlencoded',
           'x-api-token': API_TOKEN
-        }
+        },
+        body: new URLSearchParams({ azione: 'eseguiMacro' })
       })
       .then(response => response.json())
       .then(data => {
-        if (data.esito) {
-          clearInterval(intervallo);
-          esitoBox.textContent = data.esito;
-          esitoBox.style.backgroundColor = data.colore || '#d4edda';
-          esitoBox.style.color = '#000';
-          esitoBox.style.fontSize = '22px';
-          esitoBox.style.fontWeight = 'bold';
-          esitoBox.style.display = 'block';
+        esitoBox.textContent = data.esito || 'Registrazione completata.';
+        esitoBox.style.backgroundColor = data.colore || '#d4edda';
+        esitoBox.style.color = '#155724';
+        esitoBox.style.fontSize = '22px';
+        esitoBox.style.fontWeight = 'bold';
+        esitoBox.style.display = 'block';
 
-          setTimeout(() => {
-            esitoBox.style.display = 'none';
-            document.getElementById('nome').value = '';
-            document.getElementById('cognome').value = '';
-            tornaAllaSchermataIniziale();
-          }, 5000);
-        }
+        setTimeout(() => {
+        esitoBox.style.display = 'none';
+        document.getElementById('nome').value = '';
+        document.getElementById('cognome').value = '';
+        tornaAllaSchermataIniziale();
+      }, 5000);
+
       })
       .catch(error => {
-        console.error("Errore nel polling esito:", error);
+        esitoBox.textContent = 'Errore nell’avvio della macro.';
+        esitoBox.style.backgroundColor = '#ffcccc';
+        esitoBox.style.display = 'block';
+        console.error(error);
+      })
+      .finally(() => {
+        btn.disabled = false;
+        btn.textContent = '✅ REGISTRA';
       });
-
-      tentativi++;
-      if (tentativi >= maxTentativi) clearInterval(intervallo);
-    }, 500);
-  })
-  .catch(error => {
-    esitoBox.textContent = 'Errore nell’avvio della macro.';
-    esitoBox.style.backgroundColor = '#ffcccc';
-    esitoBox.style.color = '#000';
-    esitoBox.style.display = 'block';
-    console.error(error);
-  })
-  .finally(() => {
-    btn.disabled = false;
-    btn.textContent = '✅ REGISTRA';
-  });
-}
-
+    }
 
 
 
