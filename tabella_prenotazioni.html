@@ -198,21 +198,22 @@
       const formRow = document.createElement("tr");
       formRow.className = "modifica-riga";
       formRow.innerHTML = `
-        <td colspan="7">
-          <label>Data: <input type="date" id="nuova-data" value="${data}"></label>
-          <label>Orario: 
-            <select id="nuovo-orario">
-              ${Array.from({length: 15}, (_, i) => {
-                const h = (8 + i).toString().padStart(2, '0') + ':00';
-                return `<option value="${h}" ${h === orario ? 'selected' : ''}>${h}</option>`;
-              }).join('')}
-            </select>
-          </label>
-          <button onclick="salvaModifica(this)">💾</button>
-          <button onclick="chiudiFormModifica()">❌</button>
-          <div id="notifica-locale" class="notifica-locale" style="display:none;"></div>
-        </td>
-      `;
+  <td colspan="7">
+    <div id="notifica-locale" class="notifica-locale" style="display:none;"></div>
+    <label>Data: <input type="date" id="nuova-data" value="${data}"></label>
+    <label>Orario: 
+      <select id="nuovo-orario">
+        ${Array.from({length: 15}, (_, i) => {
+          const h = (8 + i).toString().padStart(2, '0') + ':00';
+          return `<option value="${h}" ${h === orario ? 'selected' : ''}>${h}</option>`;
+        }).join('')}
+      </select>
+    </label>
+    <button onclick="salvaModifica(this)">💾</button>
+    <button onclick="chiudiFormModifica()">❌</button>
+  </td>
+`;
+
       tr.insertAdjacentElement("afterend", formRow);
     }
 
