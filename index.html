@@ -6,26 +6,98 @@
   <title>SportivaNet</title>
   <link rel="manifest" href="manifest.json" />
   <style>
-    * { box-sizing: border-box; }
-
-    html, body {
+    /* INIZIO: Stili generali e modernizzati */
+    * {
+      box-sizing: border-box;
       margin: 0;
       padding: 0;
+    }
+
+    html, body {
       height: 100%;
-      font-family: sans-serif;
+      font-family: "Segoe UI", sans-serif;
       background-image: url('https://i.imgur.com/Fg2KbHy.jpeg');
       background-size: cover;
       background-position: center;
+      overflow-x: hidden;
     }
 
-    #wrapper {
+    .logo {
+      width: 180px;
+      max-width: 90%;
+      height: auto;
+      margin-top: 10px;
+      animation: fadeIn 1s ease;
+    }
+
+    @keyframes fadeIn {
+      from { opacity: 0; transform: scale(0.9); }
+      to { opacity: 1; transform: scale(1); }
+    }
+
+    h2 {
+      color: #000;
+      font-size: 26px;
+      margin-bottom: 10px;
+    }
+
+    .funzione-btn {
+      font-size: 18px;
+      font-weight: bold;
+      padding: 15px 24px;
+      border-radius: 20px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 10px;
+      border: none;
+      cursor: pointer;
+      box-shadow: 0 4px 12px rgba(0, 0, 0, 0.25);
+      transition: all 0.2s ease;
+      width: 260px;
+    }
+
+    .funzione-btn:hover {
+      transform: scale(1.03);
+      filter: brightness(1.05);
+    }
+
+    .btn-prenotazione {
+      background: linear-gradient(to right, #fff176, #ffee58);
+      color: #000;
+    }
+
+    .btn-ingresso {
+      background: linear-gradient(to right, #aed581, #9ccc65);
+      color: #000;
+    }
+
+    .funzione-desc {
+      color: white;
+      font-size: 16px;
+      text-align: center;
+      max-width: 300px;
+      margin-bottom: 10px;
+    }
+
+    #selezione-iniziale {
       display: flex;
       flex-direction: column;
       align-items: center;
-      padding: 10px;
-      gap: 12px;
+      justify-content: center;
       height: 100vh;
-      overflow-y: auto;
+      gap: 20px;
+      text-align: center;
+      padding: 20px;
+    }
+
+    #wrapper {
+      display: none;
+      flex-direction: column;
+      align-items: center;
+      padding: 20px;
+      gap: 14px;
+      min-height: 100vh;
       justify-content: flex-start;
     }
 
@@ -42,141 +114,62 @@
       border: none;
     }
 
-    .top-btn,
-    #btn-chiudi-tabella,
-    #btn-home {
-  background-color: rgba(0, 0, 0, 0.4); /* semitrasparente */
-  color: white;
-  font-weight: normal;
-  border: none;
-  padding: 10px;
-  width: 100%;
-  cursor: pointer;
-  transition: background-color 0.3s;
-  font-size: 16px;
-}
-
-#btn-home:hover {
-  background-color: rgba(0, 0, 0, 0.6); /* un po' più visibile al passaggio */
-}
-
-#btn-home:active {
-  background-color: rgba(0, 0, 0, 0.8);
-}
-
-
-    .top-btn:active,
-    #btn-chiudi-tabella:active,
-    #btn-home:active {
-      transform: translateY(2px);
-      box-shadow: 0 2px #2c3e50;
-    }
-
-    #logo {
-      display: block;
-      width: 180px;
-      max-width: 90%;
-      height: auto;
-      margin: 0;
-    }
-
     button, input, select {
-      font-size: 15px;
-      padding: 10px;
+      font-size: 16px;
+      border-radius: 16px;
+      padding: 12px;
+      transition: all 0.2s ease;
     }
 
-    input[type="text"],
-    #menu {
-      background-color: #fff59d;
-      border: 1px solid #e6d800;
-      color: #333;
-      border-radius: 6px;
-      box-shadow: inset 0 1px 2px rgba(0, 0, 0, 0.1);
-      transition: box-shadow 0.2s;
-      width: 270px;
+    select, input[type="text"], input[type="date"] {
+      width: 260px;
+      background-color: #fff176;
+      border: 1px solid #fdd835;
     }
 
-    input[type="text"]:focus,
-    #menu:focus {
-      box-shadow: 0 0 0 3px rgba(255, 245, 157, 0.5);
-      outline: none;
+    #btn-home {
+      background: linear-gradient(to right, #90caf9, #64b5f6);
+      color: white;
+      font-weight: bold;
+      border: none;
+      width: 260px;
+      padding: 14px;
+      border-radius: 18px;
+      box-shadow: 0 4px 12px rgba(0, 0, 0, 0.2);
+    }
+
+    #btn-home:hover {
+      filter: brightness(1.1);
+      transform: scale(1.03);
     }
 
     #btn-tabella {
-      width: 250px;
-      white-space: nowrap;
-      background-color: #2980b9;
+      background-color: #546e7a;
       color: white;
-      font-weight: bold;
-      border: none;
-      box-shadow: 0 4px #1f6390;
-      transition: all 0.2s ease;
-    }
-
-    #btn-tabella:hover { filter: brightness(1.1); }
-
-    #btn-tabella:active {
-      transform: translateY(2px);
-      box-shadow: 0 2px #1f6390;
+      width: 260px;
     }
 
     #btn-inserisci {
-      font-weight: bold;
-      background-color: #5c6bc0;
+      background-color: #7e57c2;
       color: white;
-      border: none;
-      box-shadow: 0 4px #3f51b5;
-      transition: all 0.2s ease;
-      width: 220px;
-    }
-
-    #btn-inserisci:hover { filter: brightness(1.1); }
-
-    #btn-inserisci:active {
-      transform: translateY(2px);
-      box-shadow: 0 2px #3f51b5;
+      width: 260px;
     }
 
     #btn-conferma {
-      font-weight: bold;
-      background-color: #5c6bc0;
+      background-color: #7e57c2;
       color: white;
-      border: none;
-      box-shadow: 0 4px #3f51b5;
-      transition: all 0.2s ease;
-      width: 220px;
-      margin-top: 6px;
-      margin-bottom: 6px;
-    }
-
-    #btn-conferma:hover { filter: brightness(1.1); }
-
-    #btn-conferma:active {
-      transform: translateY(2px);
-      box-shadow: 0 2px #3f51b5;
+      width: 260px;
     }
 
     #btn-registrazione {
-      background-color: #27ae60;
+      background-color: #43a047;
       color: white;
-      font-weight: bold;
-      box-shadow: 0 4px #1e8449;
-      border: none;
-      transition: all 0.2s ease;
-      width: 220px;
-    }
-
-    #btn-registrazione:hover { filter: brightness(1.1); }
-
-    #btn-registrazione:active {
-      transform: translateY(2px);
-      box-shadow: 0 2px #1e8449;
+      width: 260px;
     }
 
     #btn-registrazione:disabled {
       background-color: #aaa;
       cursor: not-allowed;
-      box-shadow: none;
     }
 
     #extra-fields {
@@ -186,30 +179,9 @@
       justify-content: center;
     }
 
-    #extra-fields input[type="date"],
-    #extra-fields select {
+    #extra-fields input, #extra-fields select {
       width: 125px;
-      font-size: 15px;
-      padding: 9px;
-      border-radius: 6px;
-      background-color: #fff59d;
-      border: 1px solid #e6d800;
-      box-shadow: inset 0 1px 2px rgba(0, 0, 0, 0.1);
     }
-
-    #error-box, #message-box, #esito-box {
-      max-width: 270px;
-      font-size: 18px;
-      font-weight: bold;
-      padding: 12px;
-      border-radius: 6px;
-      text-align: center;
-      display: none;
-    }
-
-    #error-box { background-color: #ffe0e0; color: #900; }
-    #message-box { background-color: #fff3cd; color: #856404; }
-    #esito-box { background-color: #d4edda; color: #155724; }
 
     .readonly-field {
       background-color: #f0f0c0;
@@ -223,43 +195,49 @@
       border: 1px solid #ccc;
     }
 
-    @media only screen and (max-width: 600px) {
-      button, input, select { font-size: 16px; }
+    #error-box, #message-box, #esito-box {
+      max-width: 270px;
+      font-size: 18px;
+      font-weight: bold;
+      padding: 12px;
+      border-radius: 10px;
+      text-align: center;
+      display: none;
+    }
 
-      #btn-inserisci, #btn-conferma, #btn-registrazione {
-        width: 240px;
+    #error-box { background-color: #ffe0e0; color: #900; }
+    #message-box { background-color: #fff3cd; color: #856404; }
+    #esito-box { background-color: #d4edda; color: #155724; }
+
+    @media (max-width: 480px) {
+      .funzione-btn, input, select, button {
+        width: 90%;
       }
-
       #extra-fields input, #extra-fields select {
-        width: 145px;
-      }
-
-      #logo {
-        width: 200px;
+        width: 45%;
       }
     }
+    /* FINE: Stili */
   </style>
 </head>
 <body>
 
-  <div id="selezione-iniziale" style="display: flex; flex-direction: column; align-items: center; justify-content: center; height: 100vh; gap: 20px; background-image: url('https://i.imgur.com/Fg2KbHy.jpeg'); background-size: cover; background-position: center;">
-    <img id="logo-iniziale" src="https://i.imgur.com/G263KeW.png" style="width: 180px; max-width: 90%;" />
-    <h2 style="color: black;">Seleziona una funzione</h2>
-    <button onclick="iniziaProcedura('PRENOTAZIONE')" style="padding: 15px 30px; font-size: 18px; background-color: #ffeb3b; border: none; box-shadow: 0 4px #c8b900; font-weight: bold; width: 220px;">
-  🗓️ Prenotazione
-</button>
-<p style="max-width: 300px; text-align: center;">Se il cliente vuole prenotare un futuro accesso, clicca su “Prenotazione”.</p>
-
-    <button onclick="iniziaProcedura('INGRESSO')" style="padding: 15px 30px; font-size: 18px; background-color: #81c784; border: none; box-shadow: 0 4px #4caf50; font-weight: bold; width: 220px;">
-  🔓 Ingresso
-</button>
-<p style="max-width: 300px; text-align: center;">Se il cliente è arrivato alla struttura e vuole registrare il suo ingresso ora, clicca su “Ingresso”.</p>
+  <!-- INIZIO: Schermata iniziale con pulsanti -->
+  <div id="selezione-iniziale">
+    <img class="logo" src="https://i.imgur.com/G263KeW.png" alt="SportivaNet" />
+    <h2>Seleziona una funzione</h2>
+    <button onclick="iniziaProcedura('PRENOTAZIONE')" class="funzione-btn btn-prenotazione">📅 Prenotazione</button>
+    <p class="funzione-desc">Se il cliente vuole prenotare un futuro accesso, clicca su "Prenotazione".</p>
+    <button onclick="iniziaProcedura('INGRESSO')" class="funzione-btn btn-ingresso">➡️ Ingresso</button>
+    <p class="funzione-desc">Se il cliente è arrivato alla struttura e vuole registrare il suo ingresso ora, clicca su "Ingresso".</p>
   </div>
+  <!-- FINE: Schermata iniziale -->
 
-  <div id="wrapper" style="display: none;">
-    <button id="btn-home" onclick="tornaAllaSchermataIniziale()">🏠 Torna alla home</button>
-    <img id="logo" src="https://i.imgur.com/G263KeW.png" />
-    <button id="btn-tabella" onclick="apriTabella()">📋 Visualizza ingressi</button>
+  <!-- INIZIO: Sezione wrapper (prenotazione o ingresso) -->
+  <div id="wrapper">
+    <button id="btn-home" onclick="tornaAllaSchermataIniziale()">⬅ Torna indietro</button>
+    <img class="logo" src="https://i.imgur.com/G263KeW.png" />
+    <button id="btn-tabella" onclick="apriTabella()">📋 Visualizza prenotazioni</button>
     <select id="menu" onchange="updateInputColor()">
       <option value="PRENOTAZIONE">PRENOTAZIONE</option>
       <option value="INGRESSO">INGRESSO</option>
@@ -278,9 +256,11 @@
     <div id="error-box"></div>
     <div id="message-box"></div>
   </div>
+  <!-- FINE: wrapper -->
 
+  <!-- INIZIO: Schermata tabella -->
   <div id="iframe-wrapper">
-    <button id="btn-chiudi-tabella" onclick="chiudiTabella()">⬅ Torna indietro</button>
+    <button id="btn-home" onclick="chiudiTabella()">⬅ Torna indietro</button>
     <iframe id="iframe-tabella"></iframe>
   </div>
 
@@ -533,52 +513,50 @@
 
     let inattivitaTimer;
 
-function resetInattivita() {
-  clearTimeout(inattivitaTimer);
+    function resetInattivita() {
+          clearTimeout(inattivitaTimer);
+          const wrapperVisible = document.getElementById('wrapper').style.display !== 'none';
+          const iframeVisible = document.getElementById('iframe-wrapper').style.display !== 'none';
+          if (wrapperVisible && !iframeVisible) {
+            inattivitaTimer = setTimeout(() => {
+              tornaAllaSchermataIniziale();
+            }, 30000); // 30 secondi
+          }
+        }
 
-  const wrapperVisible = document.getElementById('wrapper').style.display !== 'none';
-  const iframeWrapperVisible = document.getElementById('iframe-wrapper').style.display !== 'none';
+        function tornaAllaSchermataIniziale() {
+          document.getElementById('wrapper').style.display = 'none';
+          document.getElementById('iframe-wrapper').style.display = 'none';
+          document.getElementById('selezione-iniziale').style.display = 'flex';
+          localStorage.removeItem('tipoAccesso');
+        }
 
-  // Se siamo nella schermata inserimento, attiva il timer di ritorno
-  if (wrapperVisible && !iframeWrapperVisible) {
-    inattivitaTimer = setTimeout(() => {
-      tornaAllaSchermataIniziale();
-    }, 30000); // 30 secondi
-  }
-}
+        function iniziaProcedura(tipo) {
+          localStorage.setItem('tipoAccesso', tipo);
+          document.getElementById('selezione-iniziale').style.display = 'none';
+          document.getElementById('wrapper').style.display = 'flex';
+          document.getElementById('menu').value = tipo;
+          resetInattivita();
+          updateInputColor(); // 👈 questa funzione la devi incollare tu sotto
+        }
 
-function tornaAllaSchermataIniziale() {
-  document.getElementById('wrapper').style.display = 'none';
-  document.getElementById('iframe-wrapper').style.display = 'none';
-  document.getElementById('selezione-iniziale').style.display = 'flex';
-  localStorage.removeItem('tipoAccesso');
-}
+        window.onload = function () {
+          const tipoSalvato = localStorage.getItem('tipoAccesso');
+          if (tipoSalvato) {
+            document.getElementById('selezione-iniziale').style.display = 'none';
+            document.getElementById('wrapper').style.display = 'flex';
+            document.getElementById('menu').value = tipoSalvato;
+            updateInputColor(); // 👈 funzione tua
+          } else {
+            document.getElementById('selezione-iniziale').style.display = 'flex';
+            document.getElementById('wrapper').style.display = 'none';
+          }
 
-function iniziaProcedura(tipo) {
-  localStorage.setItem('tipoAccesso', tipo);
-  document.getElementById('selezione-iniziale').style.display = 'none';
-  document.getElementById('wrapper').style.display = 'flex';
-  document.getElementById('menu').value = tipo;
-  updateInputColor();
-  resetInattivita();
-}
+          document.addEventListener('mousemove', resetInattivita);
+          document.addEventListener('keydown', resetInattivita);
+          document.addEventListener('click', resetInattivita);
+        };
 
-window.onload = function () {
-  const tipoSalvato = localStorage.getItem('tipoAccesso');
-  if (tipoSalvato) {
-    document.getElementById('selezione-iniziale').style.display = 'none';
-    document.getElementById('wrapper').style.display = 'flex';
-    document.getElementById('menu').value = tipoSalvato;
-    updateInputColor();
-  } else {
-    document.getElementById('selezione-iniziale').style.display = 'flex';
-    document.getElementById('wrapper').style.display = 'none';
-  }
-
-  document.addEventListener('mousemove', resetInattivita);
-  document.addEventListener('keydown', resetInattivita);
-  document.addEventListener('click', resetInattivita);
-};
 
   </script>
 
