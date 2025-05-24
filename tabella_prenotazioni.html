@@ -260,13 +260,19 @@
         return;
       }
 
+      function formattaDataItaliana(data) {
+  if (!data) return '';
+  const [anno, mese, giorno] = data.split('-');
+  return `${giorno}/${mese}/${anno}`;
+}
+
       dati.slice(1).forEach(riga => {
         if (!riga || riga.length < 6) return;
         const id = `${riga[1]}|${riga[2]}|${riga[3]}|${riga[4]}|${riga[5]}`;
         const tr = document.createElement("tr");
         tr.innerHTML = `
           <td class="opaco">${riga[0]}</td>
-          <td>${riga[1]}</td>
+          <td>${formattaDataItaliana(riga[1])}</td>          
           <td>${riga[2]}</td>
           <td>${riga[3]}</td>
           <td>${riga[4]}</td>
