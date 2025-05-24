@@ -10,17 +10,17 @@
       background: url('https://i.imgur.com/Fg2KbHy.jpeg') no-repeat center center fixed;
       background-size: cover;
       margin: 0;
-      padding: 20px;
+      padding: 0;
     }
 
     h1 {
       position: sticky;
       top: 0;
-      z-index: 10;
+      z-index: 999;
       margin: 0;
-      padding: 8px 0;
+      padding: 10px;
       font-size: 20px;
-      background-color: rgba(0, 0, 0, 0.6);
+      background-color: rgba(0, 0, 0, 0.7);
       text-align: center;
       color: white;
       text-shadow: 1px 1px 2px black;
@@ -34,6 +34,9 @@
       align-items: center;
       gap: 12px;
       flex-wrap: wrap;
+      color: white;
+      font-weight: bold;
+      text-shadow: 1px 1px 2px black;
     }
 
     #filtro-mese {
@@ -42,31 +45,27 @@
       border-radius: 6px;
       background-color: #fff59d;
       border: 1px solid #e6d800;
-      box-shadow: inset 0 1px 2px rgba(0, 0, 0, 0.1);
-      transition: box-shadow 0.2s;
-    }
-
-    #filtro-mese:focus {
-      box-shadow: 0 0 0 3px rgba(255, 245, 157, 0.5);
-      outline: none;
     }
 
     #totali {
       display: flex;
-      flex-direction: row;
       gap: 20px;
       font-weight: bold;
       color: white;
       text-shadow: 1px 1px 2px black;
     }
 
-    #caricamento {
+    #caricamento, #nessun-dato {
       text-align: center;
       font-style: italic;
       color: white;
       margin-top: 20px;
       font-size: 18px;
       text-shadow: 1px 1px 2px black;
+    }
+
+    .table-container {
+      overflow-x: auto;
     }
 
     table {
@@ -77,15 +76,18 @@
       box-shadow: 0 0 10px rgba(0,0,0,0.3);
     }
 
+    thead {
+      background-color: #455a64;
+      color: white;
+    }
+
     th, td {
-      padding: 12px 15px;
+      padding: 10px;
       text-align: center;
       border-bottom: 1px solid #ddd;
     }
 
     th {
-      background-color: #009879;
-      color: white;
       text-transform: uppercase;
       font-size: 14px;
     }
@@ -96,15 +98,6 @@
 
     tr:hover {
       background-color: rgba(0, 0, 0, 0.05);
-    }
-
-    #nessun-dato {
-      text-align: center;
-      color: #fff;
-      font-style: italic;
-      margin-top: 30px;
-      text-shadow: 1px 1px 2px black;
-      display: none;
     }
   </style>
 </head>
@@ -138,18 +131,20 @@
 
   <p id="caricamento">⏳ Caricamento dati in corso...</p>
 
-  <table id="tabella-ingressi">
-    <thead>
-      <tr>
-        <th>Data</th>
-        <th>Ora</th>
-        <th>Nome</th>
-        <th>Cognome</th>
-        <th>Struttura</th>
-      </tr>
-    </thead>
-    <tbody></tbody>
-  </table>
+  <div class="table-container">
+    <table id="tabella-ingressi">
+      <thead>
+        <tr>
+          <th>Data</th>
+          <th>Ora</th>
+          <th>Nome</th>
+          <th>Cognome</th>
+          <th>Struttura</th>
+        </tr>
+      </thead>
+      <tbody></tbody>
+    </table>
+  </div>
 
   <p id="nessun-dato">Nessun dato da visualizzare.</p>
 
