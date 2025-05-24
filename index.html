@@ -130,7 +130,7 @@
     }
 
     #btn-home {
-      background: linear-gradient(to right, #90caf9, #64b5f6);
+      background: linear-gradient(to right, #ff8a65, #ff7043);
       color: white;
       font-weight: bold;
       border: none;
@@ -158,9 +158,14 @@
       justify-content: center;
     }
 
-    #extra-fields input, #extra-fields select {
-      width: 125px;
-    }
+   #extra-fields input[type="date"] {
+  width: 160px; /* più largo per la data */
+}
+
+#extra-fields select {
+  width: 90px;   /* più stretto per l'orario */
+}
+
 
     .readonly-field {
       background-color: #f0f0c0;
