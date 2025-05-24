@@ -1,8 +1,11 @@
-
+<!DOCTYPE html>
+<html lang="it">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <title>SportivaNet</title>
   <link rel="manifest" href="manifest.json" />
   <style>
-    /* INIZIO: Stili generali e modernizzati */
     * {
       box-sizing: border-box;
       margin: 0;
@@ -15,7 +18,9 @@
       background-image: url('https://i.imgur.com/Fg2KbHy.jpeg');
       background-size: cover;
       background-position: center;
-      overflow-x: hidden;
+      overflow: hidden;
+      transform: scale(0.95);
+      transform-origin: top center;
     }
 
     .logo {
@@ -93,8 +98,8 @@
       align-items: center;
       padding: 20px;
       gap: 14px;
-      min-height: 900px;
-      min-height: 100vh;
+      height: 100vh;
+      overflow-y: auto;
       justify-content: flex-start;
     }
 
@@ -140,34 +145,11 @@
       transform: scale(1.03);
     }
 
-    #btn-tabella {
-      background-color: #546e7a;
-      color: white;
-      width: 260px;
-    }
-
-    #btn-inserisci {
-      background-color: #7e57c2;
-      color: white;
-      width: 260px;
-    }
-
-    #btn-conferma {
-      background-color: #7e57c2;
-      color: white;
-      width: 260px;
-    }
-
-    #btn-registrazione {
-      background-color: #43a047;
-      color: white;
-      width: 260px;
-    }
-
-    #btn-registrazione:disabled {
-      background-color: #aaa;
-      cursor: not-allowed;
-    }
+    #btn-tabella { background-color: #546e7a; color: white; width: 260px; }
+    #btn-inserisci { background-color: #7e57c2; color: white; width: 260px; }
+    #btn-conferma { background-color: #7e57c2; color: white; width: 260px; }
+    #btn-registrazione { background-color: #43a047; color: white; width: 260px; }
+    #btn-registrazione:disabled { background-color: #aaa; cursor: not-allowed; }
 
     #extra-fields {
       display: flex;
@@ -215,7 +197,6 @@
         width: 45%;
       }
     }
-    /* FINE: Stili */
   </style>
 </head>
 <body>
@@ -539,22 +520,30 @@
         }
 
         window.onload = function () {
-          const tipoSalvato = localStorage.getItem('tipoAccesso');
-          if (tipoSalvato) {
-            document.getElementById('selezione-iniziale').style.display = 'none';
-            document.getElementById('wrapper').style.display = 'flex';
-            document.getElementById('menu').value = tipoSalvato;
-            updateInputColor(); // 👈 funzione tua
-          } else {
-            document.getElementById('selezione-iniziale').style.display = 'flex';
-            document.getElementById('wrapper').style.display = 'none';
-          }
+  const tipoSalvato = localStorage.getItem('tipoAccesso');
+  if (tipoSalvato) {
+    document.getElementById('selezione-iniziale').style.display = 'none';
+    document.getElementById('wrapper').style.display = 'flex';
+    document.getElementById('menu').value = tipoSalvato;
+    updateInputColor();
+  } else {
+    document.getElementById('selezione-iniziale').style.display = 'flex';
+    document.getElementById('wrapper').style.display = 'none';
+  }
 
-          document.addEventListener('mousemove', resetInattivita);
-          document.addEventListener('keydown', resetInattivita);
-          document.addEventListener('click', resetInattivita);
-        };
+  document.addEventListener('mousemove', resetInattivita);
+  document.addEventListener('keydown', resetInattivita);
+  document.addEventListener('click', resetInattivita);
 
+  // 👇 Qui dentro esegui anche il resize, tutto nello stesso evento
+  try {
+    if (window.outerHeight < 900 || window.outerWidth < 450) {
+      window.resizeTo(450, 920);
+    }
+  } catch (e) {
+    console.warn("⚠️ Il resize della finestra è stato bloccato dal browser.");
+  }
+};
 
   </script>
 
