@@ -7,251 +7,278 @@
   <link href="https://fonts.googleapis.com/css2?family=Nunito:wght@500;700&display=swap" rel="stylesheet">
   <link rel="manifest" href="manifest.json" />
   <style>
-    * {
-      box-sizing: border-box;
-      margin: 0;
-      padding: 0;
-    }
+  * {
+    box-sizing: border-box;
+    margin: 0;
+    padding: 0;
+  }
 
-    html {
-      height: 100%;
-      background-image: url('https://i.imgur.com/Fg2KbHy.jpeg');
-      background-size: cover;
-      background-position: center;
-    }
+  html {
+    height: 100%;
+    background-image: url('https://i.imgur.com/Fg2KbHy.jpeg');
+    background-size: cover;
+    background-position: center;
+  }
 
-    body {
-      height: 100%;
-      font-family: 'Nunito', sans-serif;
-      overflow: hidden;
-      transform: scale(0.95);
-      transform-origin: top center;
-    }
+  body {
+    height: 100%;
+    font-family: 'Nunito', sans-serif;
+    overflow: hidden;
+    transform: scale(0.95);
+    transform-origin: top center;
+  }
 
-    .logo {
-      width: 180px;
-      max-width: 90%;
-      height: auto;
-      margin-top: 10px;
-      animation: fadeIn 1s ease;
-    }
+  .logo {
+    width: 180px;
+    max-width: 90%;
+    height: auto;
+    margin-top: 10px;
+    animation: fadeIn 1s ease;
+  }
 
-    @keyframes fadeIn {
-      from { opacity: 0; transform: scale(0.9); }
-      to { opacity: 1; transform: scale(1); }
-    }
+  @keyframes fadeIn {
+    from { opacity: 0; transform: scale(0.9); }
+    to { opacity: 1; transform: scale(1); }
+  }
 
-    h2 {
-      color: #000;
-      font-size: 26px;
-      margin-bottom: 10px;
-    }
+  h2 {
+    color: #000;
+    font-size: 26px;
+    margin-bottom: 10px;
+  }
 
-    .funzione-btn {
-      font-size: 18px;
-      font-weight: bold;
-      padding: 15px 24px;
-      border-radius: 20px;
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      gap: 10px;
-      border: none;
-      cursor: pointer;
-      box-shadow: 0 4px 12px rgba(0, 0, 0, 0.25);
-      transition: all 0.2s ease;
-      width: 260px;
-    }
+  .funzione-btn {
+    font-size: 18px;
+    font-weight: bold;
+    padding: 15px 24px;
+    border-radius: 20px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 10px;
+    border: none;
+    cursor: pointer;
+    width: 260px;
+    background-size: 200% auto;
+    box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.3),
+                0 4px 12px rgba(0, 0, 0, 0.25),
+                0 2px 4px rgba(0, 0, 0, 0.2);
+    transition: all 0.2s ease;
+    text-shadow: 0 1px 0 rgba(255, 255, 255, 0.4);
+  }
 
-    .funzione-btn:hover {
-      transform: scale(1.03);
-      filter: brightness(1.05);
-    }
+  .funzione-btn:hover {
+    transform: scale(1.03) translateY(-2px);
+    filter: brightness(1.05);
+    box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.4),
+                0 6px 14px rgba(0, 0, 0, 0.3);
+  }
 
-    .btn-prenotazione {
-      background: linear-gradient(to right, #fff176, #ffee58);
-      color: #000;
-    }
+  .btn-prenotazione {
+    background: linear-gradient(to right, #fff176, #ffee58);
+    color: #000;
+  }
 
-    .btn-ingresso {
-      background: linear-gradient(to right, #aed581, #9ccc65);
-      color: #000;
-    }
+  .btn-ingresso {
+    background: linear-gradient(to right, #aed581, #9ccc65);
+    color: #000;
+  }
 
-    .funzione-desc {
-      color: white;
-      font-size: 16px;
-      text-align: center;
-      max-width: 300px;
-      margin-bottom: 10px;
-    }
+  .funzione-desc {
+    color: white;
+    font-size: 16px;
+    text-align: center;
+    max-width: 300px;
+    margin-bottom: 10px;
+  }
 
-    #selezione-iniziale {
-      display: flex;
-      flex-direction: column;
-      align-items: center;
-      justify-content: center;
-      height: 100vh;
-      gap: 20px;
-      text-align: center;
-      padding: 20px;
-    }
+  #selezione-iniziale {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    height: 100vh;
+    gap: 20px;
+    text-align: center;
+    padding: 20px;
+  }
 
-    #wrapper {
-      display: none;
-      flex-direction: column;
-      align-items: center;
-      padding: 18px;
-      gap: 12px;
-      height: 100vh;
-      overflow-y: auto;
-      justify-content: flex-start;
-    }
+  #wrapper {
+    display: none;
+    flex-direction: column;
+    align-items: center;
+    padding: 18px;
+    gap: 12px;
+    height: 100vh;
+    overflow-y: auto;
+    justify-content: flex-start;
+  }
 
-    #iframe-wrapper {
-      display: none;
-      width: 100%;
-      height: 100vh;
-      flex-direction: column;
-      align-items: center;
-    }
+  #iframe-wrapper {
+    display: none;
+    width: 100%;
+    height: 100vh;
+    flex-direction: column;
+    align-items: center;
+  }
 
-    #iframe-tabella {
-      width: 100%;
-      height: calc(100vh - 100px);
-      border: none;
-    }
+  #iframe-tabella {
+    width: 100%;
+    height: calc(100vh - 100px);
+    border: none;
+  }
 
-    button, input, select {
-      font-size: 16px;
-      border-radius: 16px;
-      padding: 8px 12px;
-      transition: all 0.2s ease;
-    }
+  button, input, select {
+    font-size: 16px;
+    border-radius: 16px;
+    padding: 8px 12px;
+    transition: all 0.2s ease;
+  }
 
-    select, input[type="text"], input[type="date"] {
-      width: 260px;
-      background-color: #fff176;
-      border: 1px solid #fdd835;
-    }
+  select, input[type="text"], input[type="date"] {
+    width: 260px;
+    background-color: #fff176;
+    border: 1px solid #fdd835;
+  }
 
-    #menu {
-      text-align: center;
-      font-weight: bold;
-    }
+  input[type="date"] {
+    font-family: 'Nunito', sans-serif;
+    font-size: 16px;
+    padding: 10px;
+    color: #444;
+    background-color: #fff176;
+    border-radius: 10px;
+    border: 1px solid #fbc02d;
+  }
 
-    #menu option {
-      text-align: center;
-    }
+  #menu {
+    text-align: center;
+    font-weight: bold;
+  }
 
-    #btn-home {
-      background-color: rgba(0, 0, 0, 0.4);
-      color: white;
-      font-weight: bold;
-      border: none;
-      width: 260px;
-      padding: 14px;
-      border-radius: 18px;
-      box-shadow: 0 4px 12px rgba(0, 0, 0, 0.2);
-    }
+  #menu option {
+    text-align: center;
+  }
 
-    #btn-home:hover {
-      filter: brightness(1.1);
-      transform: scale(1.03);
-    }
+  #btn-home {
+    background-color: rgba(0, 0, 0, 0.4);
+    color: white;
+    font-weight: bold;
+    border: none;
+    width: 260px;
+    padding: 14px;
+    border-radius: 18px;
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.2);
+  }
 
-    #btn-tabella { background-color: #546e7a; color: white; width: 260px; }
-    #btn-inserisci { background-color: #37474f; color: white; width: 260px; }
-    #btn-conferma { background-color: #37474f; color: white; width: 260px; }
-    #btn-registrazione { background-color: #43a047; color: white; width: 260px; }
-    #btn-registrazione:disabled { background-color: #aaa; cursor: not-allowed; }
+  #btn-home:hover {
+    filter: brightness(1.1);
+    transform: scale(1.03);
+  }
+
+  #btn-tabella { background-color: #546e7a; color: white; width: 260px; }
+  #btn-inserisci { background-color: #37474f; color: white; width: 260px; }
+  #btn-conferma { background-color: #37474f; color: white; width: 260px; }
+  #btn-registrazione { background-color: #43a047; color: white; width: 260px; }
+  #btn-registrazione:disabled { background-color: #aaa; cursor: not-allowed; }
+
+  #extra-fields {
+    display: flex;
+    gap: 10px;
+    flex-wrap: wrap;
+    justify-content: center;
+  }
+
+  #extra-fields input[type="date"] {
+    width: 160px;
+  }
+
+  #extra-fields select {
+    width: 90px;
+  }
+
+  .readonly-field {
+    background-color: #e0e0e0;
+    border: 1px solid #bbb;
+  }
+
+  .readonly-field.campo-disabilitato {
+    background-color: #d0d0d0 !important;
+    color: #555 !important;
+    font-style: italic;
+    opacity: 0.6;
+  }
+
+  .readonly-active {
+    background-color: white;
+    color: black;
+    border: 1px solid #ccc;
+    font-style: normal;
+  }
+
+  .campo-disabilitato {
+    color: #777;
+    font-style: italic;
+  }
+
+  #error-box, #message-box, #esito-box {
+    max-width: 270px;
+    font-size: 18px;
+    font-weight: bold;
+    padding: 12px;
+    border-radius: 10px;
+    text-align: center;
+    display: none;
+    margin-bottom: 40px;
+  }
+
+  #error-box { background-color: #ffe0e0; color: #900; }
+  #message-box { background-color: #fff3cd; color: #856404; }
+  #esito-box { background-color: #d4edda; color: #155724; }
+
+  @media (max-width: 480px) {
+    .funzione-btn, input, select, button {
+      width: 90%;
+    }
 
     #extra-fields {
-      display: flex;
-      gap: 10px;
-      flex-wrap: wrap;
+      flex-wrap: nowrap;
+      gap: 8px;
       justify-content: center;
     }
 
     #extra-fields input[type="date"] {
-      width: 160px;
+      flex: 1.3;
+      min-width: 140px;
     }
 
     #extra-fields select {
-      width: 90px;
+      flex: 1;
+      min-width: 100px;
     }
 
-    .readonly-field {
-      background-color: #e0e0e0;
-      border: 1px solid #bbb;
+    .funzione-btn {
+      font-size: 20px;
     }
 
-    .readonly-field.campo-disabilitato {
-      background-color: #d0d0d0 !important;
-      color: #555 !important;
-      font-style: italic;
-      opacity: 0.6;
+    .logo {
+      width: 240px;
+    }
+  }
+
+  /* 👇 Versione desktop: ingrandimento pulsanti e logo */
+  @media (min-width: 481px) {
+    .funzione-btn {
+      font-size: 22px;
     }
 
-
-
-    .readonly-active {
-      background-color: white;
-      color: black;
-      border: 1px solid #ccc;
-      font-style: normal;
+    .logo {
+      width: 280px;
     }
+  }
+</style>
 
-    .campo-disabilitato {
-      color: #777;
-      font-style: italic;
-    }
 
-    #error-box, #message-box, #esito-box {
-      max-width: 270px;
-      font-size: 18px;
-      font-weight: bold;
-      padding: 12px;
-      border-radius: 10px;
-      text-align: center;
-      display: none;
-      margin-bottom: 40px;
-    }
-
-    #error-box { background-color: #ffe0e0; color: #900; }
-    #message-box { background-color: #fff3cd; color: #856404; }
-    #esito-box { background-color: #d4edda; color: #155724; }
-
-    @media (max-width: 480px) {
-      .funzione-btn, input, select, button {
-        width: 90%;
-      }
-
-      #extra-fields {
-        flex-wrap: nowrap;
-        gap: 8px;
-        justify-content: center;
-      }
-
-      #extra-fields input[type="date"] {
-        flex: 1.3;
-        min-width: 140px;
-      }
-
-      #extra-fields select {
-        flex: 1;
-        min-width: 100px;
-      }
-
-      .funzione-btn {
-        font-size: 20px;
-      }
-
-      .logo {
-        width: 240px;
-      }
-    }
-  </style>
 </head>
 
 </head>
