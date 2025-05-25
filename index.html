@@ -268,14 +268,19 @@
 
   /* 👇 Versione desktop: ingrandimento pulsanti e logo */
   @media (min-width: 481px) {
-    .funzione-btn {
-      font-size: 22px;
-    }
-
-    .logo {
-      width: 280px;
-    }
+  .funzione-btn {
+    font-size: 22px;
   }
+
+  .logo-iniziale {
+    width: 260px;
+  }
+
+  .logo-inserimento {
+    width: 180px;
+  }
+}
+
 </style>
 
 
@@ -286,7 +291,7 @@
 
   <!-- INIZIO: Schermata iniziale con pulsanti -->
   <div id="selezione-iniziale">
-    <img class="logo" src="https://i.imgur.com/G263KeW.png" alt="SportivaNet" />
+    <img class="logo logo-iniziale" src="https://i.imgur.com/G263KeW.png" alt="SportivaNet" />
     <h2>Seleziona una funzione</h2>
     <button onclick="iniziaProcedura('PRENOTAZIONE')" class="funzione-btn btn-prenotazione">📅 Prenotazione</button>
     <p class="funzione-desc">Se il cliente vuole prenotare un futuro accesso, clicca su "Prenotazione".</p>
@@ -298,7 +303,7 @@
   <!-- INIZIO: Sezione wrapper (prenotazione o ingresso) -->
   <div id="wrapper">
     <button id="btn-home" onclick="tornaAllaSchermataIniziale()">⬅ Torna indietro</button>
-    <img class="logo" src="https://i.imgur.com/G263KeW.png" />
+    <img class="logo logo-inserimento" src="https://i.imgur.com/G263KeW.png" />
     <button id="btn-tabella" onclick="apriTabella()">📋 Visualizza prenotazioni</button>
     <select id="menu" onchange="updateInputColor()">
       <option value="PRENOTAZIONE">PRENOTAZIONE</option>
