@@ -4,7 +4,6 @@
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <title>SportivaNet</title>
-  <link href="https://fonts.googleapis.com/css2?family=Nunito:wght@500;700&display=swap" rel="stylesheet">
   <link rel="manifest" href="manifest.json" />
   <style>
     * {
@@ -22,18 +21,24 @@
 
     body {
       height: 100%;
-      font-family: 'Nunito', sans-serif;
+      font-family: "Segoe UI", sans-serif;
       overflow: hidden;
       transform: scale(0.95);
       transform-origin: top center;
     }
 
     .logo {
-      width: 180px;
+      width: 280px;
       max-width: 90%;
       height: auto;
       margin-top: 10px;
       animation: fadeIn 1s ease;
+    }
+
+    @media (max-width: 768px) {
+      .logo {
+        width: 240px;
+      }
     }
 
     @keyframes fadeIn {
@@ -48,10 +53,10 @@
     }
 
     .funzione-btn {
-      font-size: 18px;
+      font-size: 20px;
       font-weight: bold;
       padding: 15px 24px;
-      border-radius: 20px;
+      border-radius: 16px;
       display: flex;
       align-items: center;
       justify-content: center;
@@ -61,6 +66,8 @@
       box-shadow: 0 4px 12px rgba(0, 0, 0, 0.25);
       transition: all 0.2s ease;
       width: 260px;
+      background-color: #37474f;
+      color: white;
     }
 
     .funzione-btn:hover {
@@ -69,13 +76,13 @@
     }
 
     .btn-prenotazione {
-      background: linear-gradient(to right, #fff176, #ffee58);
-      color: #000;
+      background-color: #37474f;
+      color: white;
     }
 
     .btn-ingresso {
-      background: linear-gradient(to right, #aed581, #9ccc65);
-      color: #000;
+      background-color: #37474f;
+      color: white;
     }
 
     .funzione-desc {
@@ -135,13 +142,22 @@
       border: 1px solid #fdd835;
     }
 
-    #menu {
-      text-align: center;
+    input[type="date"] {
+      font-size: 16px;
       font-weight: bold;
+      padding: 10px;
+      border-radius: 12px;
+      border: 1px solid #999;
+      background-color: #fefbd8;
+      color: #333;
+      appearance: none;
+      -webkit-appearance: none;
     }
 
-    #menu option {
-      text-align: center;
+    input[type="date"]::-webkit-calendar-picker-indicator {
+      background-color: #ffc107;
+      padding: 4px;
+      border-radius: 8px;
     }
 
     #btn-home {
@@ -182,29 +198,15 @@
     }
 
     .readonly-field {
-      background-color: #e0e0e0;
+      background-color: #f0f0c0;
+      color: #777;
       border: 1px solid #bbb;
     }
-
-    .readonly-field.campo-disabilitato {
-      background-color: #d0d0d0 !important;
-      color: #555 !important;
-      font-style: italic;
-      opacity: 0.6;
-    }
-
-
 
     .readonly-active {
       background-color: white;
       color: black;
       border: 1px solid #ccc;
-      font-style: normal;
-    }
-
-    .campo-disabilitato {
-      color: #777;
-      font-style: italic;
     }
 
     #error-box, #message-box, #esito-box {
@@ -226,34 +228,11 @@
       .funzione-btn, input, select, button {
         width: 90%;
       }
-
-      #extra-fields {
-        flex-wrap: nowrap;
-        gap: 8px;
-        justify-content: center;
-      }
-
-      #extra-fields input[type="date"] {
-        flex: 1.3;
-        min-width: 140px;
-      }
-
-      #extra-fields select {
-        flex: 1;
-        min-width: 100px;
-      }
-
-      .funzione-btn {
-        font-size: 20px;
-      }
-
-      .logo {
-        width: 240px;
+      #extra-fields input, #extra-fields select {
+        width: 45%;
       }
     }
   </style>
-</head>
-
 </head>
 <body>
 
@@ -279,8 +258,8 @@
     </select>
     <input type="text" id="codice" placeholder="PIN o Codice Ingresso" inputmode="numeric" pattern="[0-9]*" />
     <button id="btn-inserisci" onclick="sendToSheet()">Inserisci PIN</button>
-    <input type="text" id="nome" placeholder="Nome" readonly class="readonly-field campo-disabilitato" />
-    <input type="text" id="cognome" placeholder="Cognome" readonly class="readonly-field campo-disabilitato" />
+    <input type="text" id="nome" placeholder="Nome" readonly class="readonly-field" />
+    <input type="text" id="cognome" placeholder="Cognome" readonly class="readonly-field" />
     <div id="extra-fields">
       <input type="date" id="data" />
       <select id="orario"></select>
@@ -341,8 +320,8 @@
       cognome.value = '';
       nome.classList.remove('readonly-active');
       cognome.classList.remove('readonly-active');
-      nome.classList.add('readonly-field', 'campo-disabilitato');
-      cognome.classList.add('readonly-field', 'campo-disabilitato');
+      nome.classList.add('readonly-field');
+      cognome.classList.add('readonly-field');
       document.getElementById('error-box').style.display = 'none';
       document.getElementById('message-box').style.display = 'none';
       document.getElementById('esito-box').style.display = 'none';
@@ -441,8 +420,8 @@
         } else {
           nome.value = data.nome || '';
           cognome.value = data.cognome || '';
-          nome.classList.remove('readonly-field', 'campo-disabilitato');
-          cognome.classList.remove('readonly-field', 'campo-disabilitato');
+          nome.classList.remove('readonly-field');
+          cognome.classList.remove('readonly-field');
           nome.classList.add('readonly-active');
           cognome.classList.add('readonly-active');
           document.getElementById('codice').value = '';
