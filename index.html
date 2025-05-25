@@ -209,19 +209,31 @@
     #esito-box { background-color: #d4edda; color: #155724; }
 
     @media (max-width: 480px) {
-      .funzione-btn, input, select, button {
-        width: 90%;
-      }
-      #extra-fields input, #extra-fields select {
-        width: 45%;
-      }
-      .funzione-btn {
-        font-size: 20px;
-      }
-      .logo {
-        width: 240px;
-      }
-    }
+  .funzione-btn, input, select, button {
+    width: 90%;
+  }
+
+  #extra-fields {
+    flex-wrap: nowrap;
+    gap: 10px;
+    justify-content: center;
+  }
+
+  #extra-fields input[type="date"],
+  #extra-fields select {
+    width: 48%;
+    min-width: 130px;
+  }
+
+  .funzione-btn {
+    font-size: 20px;
+  }
+
+  .logo {
+    width: 240px;
+  }
+}
+
   </style>
 </head>
 
